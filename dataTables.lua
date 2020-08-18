@@ -52,17 +52,3 @@ AIU.itemData =
         }
     }
 }
-
--- AIU.scrollItemData =
--- {
---     {158201}, -- Int
---     {158204}, -- Stam
---     {158202}, -- AtkPwr
--- }
-
--- AIU.otherItemData =
--- {
---     {141446, 153647, 141640}, -- Tomes, All work the same, so track a total, see as 1 item.
---     {120257, 154167, 142406}, -- Drums, All work the same, so track a total, see as 1 item.
---     {132514} -- AutoHammers
--- }

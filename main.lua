@@ -1,69 +1,20 @@
-    -- local OptionsSubPanelChecklist = CreateFrame("FRAME", "AZP-IU-OptionsSubPanelChecklist")
-    -- OptionsSubPanelChecklist.name = "Checklist"
-    -- OptionsSubPanelChecklist.parent = "AzerPUG InstanceUtility"
-
-    -- InterfaceOptions_AddCategory(OptionsSubPanelChecklist);
-
 local GlobalAddonName, AIU = ...
 
--- local UpdateInterval = 1.0
--- local UpdateSecondCounter = 0
--- local zone = GetZoneText()
--- local zoneID = C_Map.GetBestMapForUnit("player")
--- local announceChannel = nil
--- local zoneShardID = nil
 local addonChannelName = "AZP-IT-AC"
--- local OptionsCorePanel
 local OptionsSubPanelChecklist
 local itemCheckListFrame
 local addonLoaded = false
 local itemData = AIU.itemData
 local initialConfig = AIU.initialConfig
 
-local addonVersion = "v0.2"
+local AZPIUCheckListVersion = "v0.3"
 local dash = " - "
-local name = "Instance Utility"             --Change all, where it should be, to Instance Utility a space!
+local name = "InstanceUtility" .. dash .. " CheckList"
 local nameFull = ("AzerPUG " .. name)
-local nameShort = "AIU"
-local promo = (nameFull .. dash ..  addonVersion)
+local nameShort = "AIU-CL"
+local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
 
 local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", "AceConsole-3.0")
--- local InstanceUtilityLDB = LibStub("LibDataBroker-1.1"):NewDataObject("InstanceUtility", {
--- 	type = "data source",
--- 	text = "InstanceUtility",
--- 	icon = "Interface\\Icons\\Inv_darkmoon_eye",
--- 	OnClick = function() addonMain:ShowHideFrame() end
--- })
--- local icon = LibStub("LibDBIcon-1.0")
-
--- function addonMain:ShowHideFrame()
---     if InstanceUtilityAddonFrame:IsShown() then
---         InstanceUtilityAddonFrame:Hide()
---     elseif not InstanceUtilityAddonFrame:IsShown() then
---         InstanceUtilityAddonFrame:Show()
---     end
--- end
-
--- function addonMain:OnInitialize()
--- 	self.db = LibStub("AceDB-3.0"):New("InstanceUtilityLDB", {
--- 		profile = {
--- 			minimap = {
--- 				hide = false,
--- 			},
--- 		},
--- 	})
--- 	icon:Register("InstanceUtility", InstanceUtilityLDB, self.db.profile.minimap)
--- 	self:RegisterChatCommand("InstanceUtility icon", "MiniMapIconToggle")
--- end
-
--- -- function addonMain:MiniMapIconToggle()
--- -- 	self.db.profile.minimap.hide = not self.db.profile.minimap.hide
--- -- 	if self.db.profile.minimap.hide then
--- -- 		icon:Hide("InstanceUtility")
--- -- 	else
--- -- 		icon:Show("InstanceUtility")
--- -- 	end
--- -- end
 
 function addonMain:OnLoad(self)
     local InstanceUtilityAddonFrame = CreateFrame("FRAME", "InstanceUtilityAddonFrame", UIParent)
@@ -72,7 +23,6 @@ function addonMain:OnLoad(self)
     InstanceUtilityAddonFrame.texture:SetAllPoints(true)
     InstanceUtilityAddonFrame:EnableMouse(true)
     InstanceUtilityAddonFrame:SetMovable(true)
-    --InstanceUtilityAddonFrame:SetScript("OnUpdate", function(...) addonMain:OnUpdate(...) end)
     InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
     InstanceUtilityAddonFrame:RegisterForDrag("LeftButton")
     InstanceUtilityAddonFrame:SetScript("OnDragStart", InstanceUtilityAddonFrame.StartMoving)
@@ -81,10 +31,6 @@ function addonMain:OnLoad(self)
     InstanceUtilityAddonFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     InstanceUtilityAddonFrame:RegisterEvent("PLAYER_LOGIN")
     InstanceUtilityAddonFrame:RegisterEvent("ADDON_LOADED")
-    --InstanceUtilityAddonFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-    --InstanceUtilityAddonFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-    --InstanceUtilityAddonFrame.TimeSinceLastUpdate = 0
-    --InstanceUtilityAddonFrame.MinuteCounter = 0
     InstanceUtilityAddonFrame:SetSize(400, 250)
     InstanceUtilityAddonFrame.texture:SetColorTexture(0.5, 0.5, 0.5, 0.5)
 
@@ -142,12 +88,6 @@ function addonMain:OnLoad(self)
     AZPReadyCheckButton.contentText:SetPoint("CENTER", 0, -1)
     AZPReadyCheckButton:SetScript("OnClick", function() DoReadyCheck() end )
 
-    -- local OptionsCoreHeader = OptionsCorePanel:CreateFontString("OptionsCoreHeader", "ARTWORK", "GameFontNormalHuge")
-    -- OptionsCoreHeader:SetText(promo)
-    -- OptionsCoreHeader:SetWidth(OptionsCorePanel:GetWidth())
-    -- OptionsCoreHeader:SetHeight(OptionsCorePanel:GetHeight())
-    -- OptionsCoreHeader:SetPoint("TOP", 0, -10)
-
     local OptionsSubChecklistHeader = OptionsSubPanelChecklist:CreateFontString("OptionsSubChecklistHeader", "ARTWORK", "GameFontNormalHuge")
     OptionsSubChecklistHeader:SetText(promo)
     OptionsSubChecklistHeader:SetWidth(OptionsSubPanelChecklist:GetWidth())
@@ -174,29 +114,14 @@ end
 
 function addonMain:OnEvent(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
-    elseif event == "PLAYER_LOGIN" then 
+    elseif event == "PLAYER_LOGIN" then
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
     elseif event == "ADDON_LOADED" then
         if addonLoaded == false then
-            addonMain:DelayedExecution(5, function() addonMain:initializeConfig() end)
+            AZPAddonHelper:DelayedExecution(5, function() addonMain:initializeConfig() end)
             addonLoaded = true
         end
     end
-end
-
-function addonMain:DelayedExecution(delayTime, delayedFunction)     -- Move to helperFunctions.
-	local frame = CreateFrame("Frame")
-	frame.start_time = GetServerTime()
-	frame:SetScript("OnUpdate", 
-		function(self)
-			if GetServerTime() - self.start_time > delayTime then
-				delayedFunction()
-				self:SetScript("OnUpdate", nil)
-				self:Hide()
-			end
-		end
-	)
-	frame:Show()
 end
 
 function addonMain:checkListButtonClicked()     -- A function to call a function?
@@ -251,10 +176,10 @@ function addonMain:createTreeGroupList()
 end
 
 function addonMain:tryGetItemID(itemID, parentFrame)
-    local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
+    local itemName, itemIcon = AZPAddonHelper:GetItemNameAndIcon(itemID)
     if itemName == nil then
-        addonMain:DelayedExecution(5, (function()
-            itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
+        AZPAddonHelper:DelayedExecution(5, (function()
+            itemName, itemIcon = AZPAddonHelper:GetItemNameAndIcon(itemID)
             if itemName == nil then
                 addonMain:tryGetItemID(itemID, parentFrame)
             else
@@ -317,14 +242,6 @@ function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
         GameTooltip:Show()
     end)
     itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-    -- parentFrame:SetScript("OnEnter", function()
-    --     GameTooltip:SetOwner(parentFrame)
-    --     GameTooltip:SetItemByID(itemID)
-    --     GameTooltip:SetSize(200, 200)
-    --     GameTooltip:Show()
-    -- end)
-    -- parentFrame:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
 function addonMain:getItemsCheckListFrame()
@@ -336,7 +253,7 @@ function addonMain:getItemsCheckListFrame()
     itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", InstanceUtilityAddonFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
-    for itemID,_ in pairs(AIUCheckedData["checkItemIDs"]) do  
+    for itemID, _ in pairs(AIUCheckedData["checkItemIDs"]) do
         i = i + 1
         local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
         local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
@@ -386,55 +303,6 @@ function addonMain:getItemsCheckListFrame()
         end)
         itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
     end
-    -- for i,v in ipairs(dataSet) do
-    --     for j,itemID in ipairs(v) do
-    --         if AIUCheckedData["checkItemIDs"][itemID] == true then
-    --             local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
-    --             local frameFrame = CreateFrame("Frame", "frameFrame", InstanceUtilityAddonFrame)
-    --             frameFrame:SetSize(300,20)
-    --             frameFrame:SetPoint("TOPLEFT", (325 * (j - 1)), -25 * i - 55)
-
-    --             local itemIconLabel = CreateFrame("Frame", "checkIcon", frameFrame)
-    --             itemIconLabel:SetSize(15, 15)
-    --             itemIconLabel:SetPoint("TOPLEFT", 5, 0)
-    --             itemIconLabel.texture = itemIconLabel:CreateTexture(nil, "BACKGROUND")
-    --             itemIconLabel.texture:SetPoint("LEFT", 0, 0)
-    --             itemIconLabel.texture:SetTexture(itemIcon)
-    --             itemIconLabel.texture:SetSize(15, 15)
-
-    --             local itemNameLabel = CreateFrame("Frame", "itemNameLabel", frameFrame)
-    --             itemNameLabel:SetSize(175, 10)
-    --             itemNameLabel:SetPoint("TOPLEFT", 25, -2)
-    --             itemNameLabel.contentText = itemNameLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    --             itemNameLabel.contentText:SetPoint("LEFT", 0, 0)
-    --             itemNameLabel.contentText:SetText(itemName)
-
-    --             itemIconLabel:SetScript("OnEnter", function()
-    --                 GameTooltip:SetOwner(itemIconLabel)
-    --                 GameTooltip:SetItemByID(itemID)
-    --                 GameTooltip:SetSize(200, 200)
-    --                 GameTooltip:Show()
-    --             end)
-    --             itemIconLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-    --             itemNameLabel:SetScript("OnEnter", function()
-    --                 GameTooltip:SetOwner(itemNameLabel)
-    --                 GameTooltip:SetItemByID(itemID)
-    --                 GameTooltip:SetSize(200, 200)
-    --                 GameTooltip:Show()
-    --             end)
-    --             itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-    --             local itemCountLabel = CreateFrame("Frame", "itemCountLabel", frameFrame)
-    --             itemCountLabel:SetSize(50, 10)
-    --             itemCountLabel:SetPoint("TOPRIGHT", -50, -3)
-    --             itemCountLabel.contentText = itemCountLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    --             itemCountLabel.contentText:SetPoint("LEFT")
-    --             itemCountLabel.contentText:SetText(GetItemCount(itemID))
-
-    --         end
-    --     end
-    -- end
 end
 
 addonMain:OnLoad()
