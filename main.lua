@@ -79,7 +79,7 @@ function addonMain:OnLoad(self)
 
     AZPReadyCheckButton = CreateFrame("Button", "AZPReadyCheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     AZPReadyCheckButton.contentText = AZPReadyCheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    AZPReadyCheckButton.contentText:SetText("Ready Check")
+    AZPReadyCheckButton.contentText:SetText("Ready Check!")
     AZPReadyCheckButton:SetWidth("100")
     AZPReadyCheckButton:SetHeight("25")
     AZPReadyCheckButton.contentText:SetWidth("100")
@@ -253,55 +253,61 @@ function addonMain:getItemsCheckListFrame()
     itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", InstanceUtilityAddonFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
-    for itemID, _ in pairs(AIUCheckedData["checkItemIDs"]) do
-        i = i + 1
-        local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
-        local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
-        parentFrame:SetSize(300,20)
-        parentFrame:SetPoint("TOPLEFT", 10, -20 * i)
+    for _, section in ipairs(itemData) do
+        for _, stat in ipairs(section[2]) do
+            for _, itemID in ipairs(stat[2]) do
+                if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
+                    i = i + 1
+                    local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
+                    local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
+                    parentFrame:SetSize(300,20)
+                    parentFrame:SetPoint("TOPLEFT", 10, -20 * i)
 
-        local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
-        itemCountLabel:SetSize(20, 15)
-        itemCountLabel:SetPoint("LEFT")
-        itemCountLabel.contentText = itemCountLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-        itemCountLabel.contentText:SetPoint("CENTER")
-        local iCountCurrent = GetItemCount(itemID)
-        if (GetItemCount(itemID) == 0) then
-            itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "\124r")
-        else
-            itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "\124r")
+                    local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
+                    itemCountLabel:SetSize(20, 15)
+                    itemCountLabel:SetPoint("LEFT")
+                    itemCountLabel.contentText = itemCountLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                    itemCountLabel.contentText:SetPoint("CENTER")
+                    local iCountCurrent = GetItemCount(itemID)
+                    if (GetItemCount(itemID) == 0) then
+                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "\124r")
+                    else
+                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "\124r")
+                    end
+
+                    local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
+                    itemIconLabel:SetSize(15, 15)
+                    itemIconLabel:SetPoint("LEFT", 25, 0)
+                    itemIconLabel.texture = itemIconLabel:CreateTexture(nil, "BACKGROUND")
+                    itemIconLabel.texture:SetPoint("LEFT", 0, 0)
+                    itemIconLabel.texture:SetTexture(itemIcon)
+                    itemIconLabel.texture:SetSize(15, 15)
+
+                    local itemNameLabel = CreateFrame("Frame", "itemNameLabel", parentFrame)
+                    itemNameLabel:SetSize(175, 15)
+                    itemNameLabel:SetPoint("LEFT", 45, 0)
+                    itemNameLabel.contentText = itemNameLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                    itemNameLabel.contentText:SetPoint("LEFT", 0, 0)
+                    itemNameLabel.contentText:SetText(itemName)
+
+                    itemIconLabel:SetScript("OnEnter", function()
+                        GameTooltip:SetOwner(itemIconLabel)
+                        GameTooltip:SetItemByID(itemID)
+                        GameTooltip:SetSize(200, 200)
+                        GameTooltip:Show()
+                    end)
+                    itemIconLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+                    itemNameLabel:SetScript("OnEnter", function()
+                        GameTooltip:SetOwner(itemNameLabel)
+                        GameTooltip:SetItemByID(itemID)
+                        GameTooltip:SetSize(200, 200)
+                        GameTooltip:Show()
+                    end)
+                    itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
+                end
+            end
         end
-
-        local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
-        itemIconLabel:SetSize(15, 15)
-        itemIconLabel:SetPoint("LEFT", 25, 0)
-        itemIconLabel.texture = itemIconLabel:CreateTexture(nil, "BACKGROUND")
-        itemIconLabel.texture:SetPoint("LEFT", 0, 0)
-        itemIconLabel.texture:SetTexture(itemIcon)
-        itemIconLabel.texture:SetSize(15, 15)
-
-        local itemNameLabel = CreateFrame("Frame", "itemNameLabel", parentFrame)
-        itemNameLabel:SetSize(175, 15)
-        itemNameLabel:SetPoint("LEFT", 45, 0)
-        itemNameLabel.contentText = itemNameLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-        itemNameLabel.contentText:SetPoint("LEFT", 0, 0)
-        itemNameLabel.contentText:SetText(itemName)
-
-        itemIconLabel:SetScript("OnEnter", function()
-            GameTooltip:SetOwner(itemIconLabel)
-            GameTooltip:SetItemByID(itemID)
-            GameTooltip:SetSize(200, 200)
-            GameTooltip:Show()
-        end)
-        itemIconLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-        itemNameLabel:SetScript("OnEnter", function()
-            GameTooltip:SetOwner(itemNameLabel)
-            GameTooltip:SetItemByID(itemID)
-            GameTooltip:SetSize(200, 200)
-            GameTooltip:Show()
-        end)
-        itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
     end
 end
 
