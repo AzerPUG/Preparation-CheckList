@@ -1,13 +1,12 @@
 local GlobalAddonName, AIU = ...
 
 local addonChannelName = "AZP-IT-AC"
-local OptionsSubPanelChecklist
 local itemCheckListFrame
 local addonLoaded = false
 local itemData = AIU.itemData
 local initialConfig = AIU.initialConfig
 
-local AZPIUCheckListVersion = "v0.3"
+AZPIUCheckListVersion = 0.2
 local dash = " - "
 local name = "InstanceUtility" .. dash .. " CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -17,22 +16,7 @@ local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
 local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", "AceConsole-3.0")
 
 function addonMain:OnLoad(self)
-    local InstanceUtilityAddonFrame = CreateFrame("FRAME", "InstanceUtilityAddonFrame", UIParent)
-    InstanceUtilityAddonFrame:SetPoint("CENTER", 0, 0)
-    InstanceUtilityAddonFrame.texture = InstanceUtilityAddonFrame:CreateTexture()
-    InstanceUtilityAddonFrame.texture:SetAllPoints(true)
-    InstanceUtilityAddonFrame:EnableMouse(true)
-    InstanceUtilityAddonFrame:SetMovable(true)
     InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
-    InstanceUtilityAddonFrame:RegisterForDrag("LeftButton")
-    InstanceUtilityAddonFrame:SetScript("OnDragStart", InstanceUtilityAddonFrame.StartMoving)
-    InstanceUtilityAddonFrame:SetScript("OnDragStop", InstanceUtilityAddonFrame.StopMovingOrSizing)
-    InstanceUtilityAddonFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-    InstanceUtilityAddonFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    InstanceUtilityAddonFrame:RegisterEvent("PLAYER_LOGIN")
-    InstanceUtilityAddonFrame:RegisterEvent("ADDON_LOADED")
-    InstanceUtilityAddonFrame:SetSize(400, 250)
-    InstanceUtilityAddonFrame.texture:SetColorTexture(0.5, 0.5, 0.5, 0.5)
 
     local AddonTitle = InstanceUtilityAddonFrame:CreateFontString("AddonTitle", "ARTWORK", "GameFontNormal")
     AddonTitle:SetText(nameFull)
@@ -61,11 +45,6 @@ function addonMain:OnLoad(self)
     ReloadButton.contentText:SetPoint("CENTER", 0, -1)
     ReloadButton:SetScript("OnClick", function() ReloadUI(); end )
 
-    OptionsSubPanelChecklist = CreateFrame("FRAME", "AZP-IU-OptionsSubPanelChecklist")
-    OptionsSubPanelChecklist.name = "Checklist"
-    OptionsSubPanelChecklist.parent = OptionsSubPanelChecklist
-    InterfaceOptions_AddCategory(OptionsSubPanelChecklist);
-
     OpenSettingsButton = CreateFrame("Button", "OpenSettingsButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     OpenSettingsButton.contentText = OpenSettingsButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     OpenSettingsButton.contentText:SetText("Open Options!")
@@ -88,6 +67,9 @@ function addonMain:OnLoad(self)
     AZPReadyCheckButton.contentText:SetPoint("CENTER", 0, -1)
     AZPReadyCheckButton:SetScript("OnClick", function() DoReadyCheck() end )
 
+    OptionsSubPanelChecklistPlaceholderText:Hide()
+    OptionsSubPanelChecklistPlaceholderText:SetParent(nil)
+
     local OptionsSubChecklistHeader = OptionsSubPanelChecklist:CreateFontString("OptionsSubChecklistHeader", "ARTWORK", "GameFontNormalHuge")
     OptionsSubChecklistHeader:SetText(promo)
     OptionsSubChecklistHeader:SetWidth(OptionsSubPanelChecklist:GetWidth())
@@ -99,6 +81,10 @@ function addonMain:OnLoad(self)
     OptionsSubChecklistSubHeader:SetWidth(OptionsSubPanelChecklist:GetWidth())
     OptionsSubChecklistSubHeader:SetHeight(OptionsSubPanelChecklist:GetHeight() - 10)
     OptionsSubChecklistSubHeader:SetPoint("TOP", 0, -40)
+end
+
+function VersionControl:CheckList()
+    return AZPIUCheckListVersion
 end
 
 function addonMain:initConfigSection()
@@ -113,10 +99,10 @@ function addonMain:initializeConfig()
 end
 
 function addonMain:OnEvent(self, event, ...)
-    if event == "PLAYER_ENTERING_WORLD" then
-    elseif event == "PLAYER_LOGIN" then
-    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-    elseif event == "ADDON_LOADED" then
+    --if event == "PLAYER_ENTERING_WORLD" then
+    --elseif event == "PLAYER_LOGIN" then
+    --elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+    if event == "ADDON_LOADED" then
         if addonLoaded == false then
             AZPAddonHelper:DelayedExecution(5, function() addonMain:initializeConfig() end)
             addonLoaded = true
@@ -138,7 +124,7 @@ function addonMain:createTreeGroupList()
     scrollFrame:SetScrollChild(scrollPanel)
     local lastFrame = nil
 
-    for _, itemSections in pairs(itemData) do
+    for _, itemSections in ipairs(itemData) do
         local sectionHeaderFrame = CreateFrame("Frame", "sectionHeaderFrame", scrollPanel)
         sectionHeaderFrame.contentText = sectionHeaderFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
         sectionHeaderFrame.contentText:SetPoint("TOPLEFT", 10, 0)
