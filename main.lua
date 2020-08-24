@@ -6,7 +6,7 @@ local addonLoaded = false
 local itemData = AIU.itemData
 local initialConfig = AIU.initialConfig
 
-AZPIUCheckListVersion = 0.2
+AZPIUCheckListVersion = 0.3
 local dash = " - "
 local name = "InstanceUtility" .. dash .. " CheckList"
 local nameFull = ("AzerPUG " .. name)
