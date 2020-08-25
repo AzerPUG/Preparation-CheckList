@@ -8,7 +8,7 @@ local initialConfig = AIU.initialConfig
 
 AZPIUCheckListVersion = 0.3
 local dash = " - "
-local name = "InstanceUtility" .. dash .. " CheckList"
+local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
 local nameShort = "AIU-CL"
 local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
