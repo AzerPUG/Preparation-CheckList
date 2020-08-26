@@ -18,11 +18,14 @@ local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", 
 function addonMain:OnLoad(self)
     InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
 
+    -- Old Code??
     local AddonTitle = InstanceUtilityAddonFrame:CreateFontString("AddonTitle", "ARTWORK", "GameFontNormal")
     AddonTitle:SetText(nameFull)
     AddonTitle:SetHeight("10")
     AddonTitle:SetPoint("TOP", "InstanceUtilityAddonFrame", -100, -3)
+    -- EndHere
 
+    -- Change Name
     TempTestButton1 = CreateFrame("Button", "TempTestButton1", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     TempTestButton1.contentText = TempTestButton1:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     TempTestButton1.contentText:SetText("Check Items!")
@@ -33,7 +36,9 @@ function addonMain:OnLoad(self)
     TempTestButton1:SetPoint("TOP", 125, -25)
     TempTestButton1.contentText:SetPoint("CENTER", 0, -1)
     TempTestButton1:SetScript("OnClick", function() addonMain:checkListButtonClicked() end )
+    -- EndHere
 
+    --MoveToCore
     ReloadButton = CreateFrame("Button", "ReloadButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     ReloadButton.contentText = ReloadButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     ReloadButton.contentText:SetText("Reload!")
@@ -55,7 +60,9 @@ function addonMain:OnLoad(self)
     OpenSettingsButton:SetPoint("TOP", 125, -75)
     OpenSettingsButton.contentText:SetPoint("CENTER", 0, -1)
     OpenSettingsButton:SetScript("OnClick", function() InterfaceOptionsFrame_OpenToCategory(OptionsSubPanelChecklist); InterfaceOptionsFrame_OpenToCategory(OptionsSubPanelChecklist); end )
+    -- EndHere
 
+    -- MoveToInstanceLeading
     AZPReadyCheckButton = CreateFrame("Button", "AZPReadyCheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     AZPReadyCheckButton.contentText = AZPReadyCheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     AZPReadyCheckButton.contentText:SetText("Ready Check!")
@@ -66,6 +73,7 @@ function addonMain:OnLoad(self)
     AZPReadyCheckButton:SetPoint("TOP", 125, -100)
     AZPReadyCheckButton.contentText:SetPoint("CENTER", 0, -1)
     AZPReadyCheckButton:SetScript("OnClick", function() DoReadyCheck() end )
+    -- EndHere
 
     OptionsSubPanelChecklistPlaceholderText:Hide()
     OptionsSubPanelChecklistPlaceholderText:SetParent(nil)
