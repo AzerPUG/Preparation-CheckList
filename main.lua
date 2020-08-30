@@ -1,98 +1,54 @@
 local GlobalAddonName, AIU = ...
 
-local addonChannelName = "AZP-IT-AC"
-local itemCheckListFrame
-local addonLoaded = false
-local itemData = AIU.itemData
-local initialConfig = AIU.initialConfig
-
-AZPIUCheckListVersion = 0.4
+local AZPIUCheckListVersion = 0.5
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
-local nameShort = "AIU-CL"
 local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
-
 local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", "AceConsole-3.0")
 
-function addonMain:OnLoad(self)
-    InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
+local itemCheckListFrame
+local itemData = AIU.itemData
+local initialConfig = AIU.initialConfig
 
-    -- Old Code??
-    local AddonTitle = InstanceUtilityAddonFrame:CreateFontString("AddonTitle", "ARTWORK", "GameFontNormal")
-    AddonTitle:SetText(nameFull)
-    AddonTitle:SetHeight("10")
-    AddonTitle:SetPoint("TOP", "InstanceUtilityAddonFrame", -100, -3)
-    -- EndHere
-
-    -- Change Name
-    TempTestButton1 = CreateFrame("Button", "TempTestButton1", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
-    TempTestButton1.contentText = TempTestButton1:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    TempTestButton1.contentText:SetText("Check Items!")
-    TempTestButton1:SetWidth("100")
-    TempTestButton1:SetHeight("25")
-    TempTestButton1.contentText:SetWidth("100")
-    TempTestButton1.contentText:SetHeight("15")
-    TempTestButton1:SetPoint("TOP", 125, -25)
-    TempTestButton1.contentText:SetPoint("CENTER", 0, -1)
-    TempTestButton1:SetScript("OnClick", function() addonMain:checkListButtonClicked() end )
-    -- EndHere
-
-    --MoveToCore
-    ReloadButton = CreateFrame("Button", "ReloadButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
-    ReloadButton.contentText = ReloadButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    ReloadButton.contentText:SetText("Reload!")
-    ReloadButton:SetWidth("100")
-    ReloadButton:SetHeight("25")
-    ReloadButton.contentText:SetWidth("100")
-    ReloadButton.contentText:SetHeight("15")
-    ReloadButton:SetPoint("TOP", 125, -50)
-    ReloadButton.contentText:SetPoint("CENTER", 0, -1)
-    ReloadButton:SetScript("OnClick", function() ReloadUI(); end )
-
-    OpenSettingsButton = CreateFrame("Button", "OpenSettingsButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
-    OpenSettingsButton.contentText = OpenSettingsButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    OpenSettingsButton.contentText:SetText("Open Options!")
-    OpenSettingsButton:SetWidth("100")
-    OpenSettingsButton:SetHeight("25")
-    OpenSettingsButton.contentText:SetWidth("100")
-    OpenSettingsButton.contentText:SetHeight("15")
-    OpenSettingsButton:SetPoint("TOP", 125, -75)
-    OpenSettingsButton.contentText:SetPoint("CENTER", 0, -1)
-    OpenSettingsButton:SetScript("OnClick", function() InterfaceOptionsFrame_OpenToCategory(OptionsSubPanelChecklist); InterfaceOptionsFrame_OpenToCategory(OptionsSubPanelChecklist); end )
-    -- EndHere
-
-    -- MoveToInstanceLeading
-    AZPReadyCheckButton = CreateFrame("Button", "AZPReadyCheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
-    AZPReadyCheckButton.contentText = AZPReadyCheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    AZPReadyCheckButton.contentText:SetText("Ready Check!")
-    AZPReadyCheckButton:SetWidth("100")
-    AZPReadyCheckButton:SetHeight("25")
-    AZPReadyCheckButton.contentText:SetWidth("100")
-    AZPReadyCheckButton.contentText:SetHeight("15")
-    AZPReadyCheckButton:SetPoint("TOP", 125, -100)
-    AZPReadyCheckButton.contentText:SetPoint("CENTER", 0, -1)
-    AZPReadyCheckButton:SetScript("OnClick", function() DoReadyCheck() end )
-    -- EndHere
-
-    OptionsSubPanelChecklistPlaceholderText:Hide()
-    OptionsSubPanelChecklistPlaceholderText:SetParent(nil)
-
-    local OptionsSubChecklistHeader = OptionsSubPanelChecklist:CreateFontString("OptionsSubChecklistHeader", "ARTWORK", "GameFontNormalHuge")
-    OptionsSubChecklistHeader:SetText(promo)
-    OptionsSubChecklistHeader:SetWidth(OptionsSubPanelChecklist:GetWidth())
-    OptionsSubChecklistHeader:SetHeight(OptionsSubPanelChecklist:GetHeight())
-    OptionsSubChecklistHeader:SetPoint("TOP", 0, -10)
-
-    local OptionsSubChecklistSubHeader = OptionsSubPanelChecklist:CreateFontString("OptionsSubChecklistSubHeader", "ARTWORK", "GameFontNormalHuge")
-    OptionsSubChecklistSubHeader:SetText("Checklist Options")
-    OptionsSubChecklistSubHeader:SetWidth(OptionsSubPanelChecklist:GetWidth())
-    OptionsSubChecklistSubHeader:SetHeight(OptionsSubPanelChecklist:GetHeight() - 10)
-    OptionsSubChecklistSubHeader:SetPoint("TOP", 0, -40)
+function VersionControl:CheckListVC()
+    return AZPIUCheckListVersion
 end
 
-function VersionControl:CheckList()
-    return AZPIUCheckListVersion
+function OnLoad:CheckListOL(self)
+    addonMain:ChangeOptionsText()
+
+    -- InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
+    --  Changed to CheckList sub frame after this created the subframe aswell.
+
+    -- Old Code??
+    
+    -- EndHere
+
+    CheckButton = CreateFrame("Button", "CheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
+    CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+    CheckButton.contentText:SetText("Check Items!")
+    CheckButton:SetWidth("100")
+    CheckButton:SetHeight("25")
+    CheckButton.contentText:SetWidth("100")
+    CheckButton.contentText:SetHeight("15")
+    CheckButton:SetPoint("TOP", 125, -75)
+    CheckButton.contentText:SetPoint("CENTER", 0, -1)
+    CheckButton:SetScript("OnClick", function() addonMain:getItemsCheckListFrame() end )
+    addonMain:initializeConfig()
+end
+
+function addonMain:ChangeOptionsText()
+    CheckListSubPanelPHTitle:Hide()
+    CheckListSubPanelPHText:Hide()
+    CheckListSubPanelPHTitle:SetParent(nil)
+    CheckListSubPanelPHText:SetParent(nil)
+
+    local CheckListSubPanelHeader = CheckListSubPanel:CreateFontString("CheckListSubPanelHeader", "ARTWORK", "GameFontNormalHuge")
+    CheckListSubPanelHeader:SetText(promo)
+    CheckListSubPanelHeader:SetWidth(CheckListSubPanel:GetWidth())
+    CheckListSubPanelHeader:SetHeight(CheckListSubPanel:GetHeight())
+    CheckListSubPanelHeader:SetPoint("TOP", 0, -10)
 end
 
 function addonMain:initConfigSection()
@@ -106,24 +62,11 @@ function addonMain:initializeConfig()
     addonMain:initConfigSection()
 end
 
-function addonMain:OnEvent(self, event, ...)
-    --if event == "PLAYER_ENTERING_WORLD" then
-    --elseif event == "PLAYER_LOGIN" then
-    --elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-    if event == "ADDON_LOADED" then
-        if addonLoaded == false then
-            AZPAddonHelper:DelayedExecution(5, function() addonMain:initializeConfig() end)
-            addonLoaded = true
-        end
-    end
-end
-
-function addonMain:checkListButtonClicked()     -- A function to call a function?
-    addonMain:getItemsCheckListFrame()
+function OnEvent:CheckListOE(event, ...)
 end
 
 function addonMain:createTreeGroupList()
-    local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", OptionsSubPanelChecklist, "UIPanelScrollFrameTemplate");
+    local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", CheckListSubPanel, "UIPanelScrollFrameTemplate");
     scrollFrame:SetSize(600, 500)
     scrollFrame:SetPoint("TOPLEFT", -2, -60)
     local scrollPanel = CreateFrame("Frame", "scrollPanel")
@@ -304,5 +247,3 @@ function addonMain:getItemsCheckListFrame()
         end
     end
 end
-
-addonMain:OnLoad()
