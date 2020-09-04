@@ -11,19 +11,12 @@ local itemCheckListFrame
 local itemData = AIU.itemData
 local initialConfig = AIU.initialConfig
 
-function VersionControl:CheckListVC()
+function AZP.IU.VersionControl:CheckList()
     return AZPIUCheckListVersion
 end
 
-function OnLoad:CheckListOL(self)
+function AZP.IU.OnLoad:CheckList(self)
     addonMain:ChangeOptionsText()
-
-    -- InstanceUtilityAddonFrame:SetScript("OnEvent", function(...) addonMain:OnEvent(...) end)
-    --  Changed to CheckList sub frame after this created the subframe aswell.
-
-    -- Old Code??
-    
-    -- EndHere
 
     CheckButton = CreateFrame("Button", "CheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
@@ -32,7 +25,7 @@ function OnLoad:CheckListOL(self)
     CheckButton:SetHeight("25")
     CheckButton.contentText:SetWidth("100")
     CheckButton.contentText:SetHeight("15")
-    CheckButton:SetPoint("TOP", 125, -75)
+    CheckButton:SetPoint("TOPLEFT", 5, -85)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
     CheckButton:SetScript("OnClick", function() addonMain:getItemsCheckListFrame() end )
     addonMain:initializeConfig()
@@ -62,7 +55,7 @@ function addonMain:initializeConfig()
     addonMain:initConfigSection()
 end
 
-function OnEvent:CheckListOE(event, ...)
+function AZP.IU.OnEvent:CheckList(event, ...)
 end
 
 function addonMain:createTreeGroupList()
@@ -113,10 +106,10 @@ function addonMain:createTreeGroupList()
 end
 
 function addonMain:tryGetItemID(itemID, parentFrame)
-    local itemName, itemIcon = AZPAddonHelper:GetItemNameAndIcon(itemID)
+    local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
     if itemName == nil then
-        AZPAddonHelper:DelayedExecution(5, (function()
-            itemName, itemIcon = AZPAddonHelper:GetItemNameAndIcon(itemID)
+        AZP.AddonHelper:DelayedExecution(5, (function()
+            itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
             if itemName == nil then
                 addonMain:tryGetItemID(itemID, parentFrame)
             else
@@ -195,10 +188,10 @@ function addonMain:getItemsCheckListFrame()
             for _, itemID in ipairs(stat[2]) do
                 if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
                     i = i + 1
-                    local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
+                    local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
-                    parentFrame:SetSize(300,20)
-                    parentFrame:SetPoint("TOPLEFT", 10, -20 * i)
+                    parentFrame:SetSize(300, 20)
+                    parentFrame:SetPoint("TOPLEFT", 110, -20 * i - 5)
 
                     local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
                     itemCountLabel:SetSize(20, 15)
