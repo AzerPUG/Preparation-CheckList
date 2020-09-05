@@ -125,18 +125,39 @@ function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     local itemCheckBox = CreateFrame("CheckButton", "itemCheckBox", parentFrame, "ChatConfigCheckButtonTemplate")
     itemCheckBox:SetSize(20, 20)
     itemCheckBox:SetPoint("LEFT", 5, 0)
+    itemCheckBox:SetHitRectInsets(0, 0, 0, 0);
+
     itemCheckBox:SetChecked(AIUCheckedData["checkItemIDs"][itemID])
+    local itemCountEditBox
     itemCheckBox:SetScript("OnClick", function()
         if itemCheckBox:GetChecked() == true then
-            AIUCheckedData["checkItemIDs"][itemID] = true
+            itemCountEditBox:SetEnabled(true)
         elseif itemCheckBox:GetChecked() == false then
             AIUCheckedData["checkItemIDs"][itemID] = nil
+            itemCountEditBox:SetEnabled(false)
+            itemCountEditBox:SetText("")
         end
     end)
 
+    itemCountEditBox = CreateFrame("EditBox", "ItemCountEditBox" .. tostring(itemId), parentFrame, "InputBoxTemplate")
+    itemCountEditBox:SetSize(25, 15)
+    itemCountEditBox:SetWidth(25)
+    itemCountEditBox:SetScale(0.75)
+    itemCountEditBox:SetPoint("LEFT", 40, 0)
+    itemCountEditBox:SetAutoFocus(false)
+    itemCountEditBox:SetNumeric(true)
+    itemCountEditBox:SetScript("OnShow", function ()
+        if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
+            itemCountEditBox:SetText(tostring(AIUCheckedData["checkItemIDs"][itemID]))
+        else
+            itemCountEditBox:SetEnabled(false)
+        end
+    end)
+    itemCountEditBox:SetScript("OnEditFocusLost", function() AIUCheckedData["checkItemIDs"][itemID] = tonumber(itemCountEditBox:GetText(), 10) end)
+
     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
     itemIconLabel:SetSize(15, 15)
-    itemIconLabel:SetPoint("TOPLEFT", 35, 0)
+    itemIconLabel:SetPoint("TOPLEFT", 65, 0)
     itemIconLabel.texture = itemIconLabel:CreateTexture(nil, "BACKGROUND")
     itemIconLabel.texture:SetPoint("LEFT", 0, 0)
     itemIconLabel.texture:SetTexture(itemIcon)
@@ -144,7 +165,7 @@ function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
 
     local itemNameLabel = CreateFrame("Frame", "itemNameLabel", parentFrame)
     itemNameLabel:SetSize(175, 10)
-    itemNameLabel:SetPoint("TOPLEFT", 55, -2)
+    itemNameLabel:SetPoint("TOPLEFT", 85, -2)
     itemNameLabel.contentText = itemNameLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     itemNameLabel.contentText:SetPoint("LEFT", 0, 0)
     itemNameLabel.contentText:SetText(itemName)
@@ -199,10 +220,12 @@ function addonMain:getItemsCheckListFrame()
                     itemCountLabel.contentText = itemCountLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
                     itemCountLabel.contentText:SetPoint("CENTER")
                     local iCountCurrent = GetItemCount(itemID)
-                    if (GetItemCount(itemID) == 0) then
-                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "\124r")
+                    if GetItemCount(itemID) == 0 then
+                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
+                    elseif GetItemCount(itemID) < AIUCheckedData["checkItemIDs"][itemID] then
+                        itemCountLabel.contentText:SetText("\124cFFFF8800" .. iCountCurrent .. "/" ..  AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
                     else
-                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "\124r")
+                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
                     end
 
                     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
