@@ -229,11 +229,11 @@ function addonMain:getItemsCheckListFrame()
                     itemCountLabel.contentText:SetPoint("CENTER")
                     local iCountCurrent = GetItemCount(itemID)
                     if GetItemCount(itemID) == 0 then
-                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
+                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "/" .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
                     elseif GetItemCount(itemID) < AIUCheckedData["checkItemIDs"][itemID] then
                         itemCountLabel.contentText:SetText("\124cFFFF8800" .. iCountCurrent .. "/" ..  AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
                     else
-                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
+                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "/" .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
                     end
 
                     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
