@@ -27,7 +27,15 @@ function AZP.IU.OnLoad:CheckList(self)
     CheckButton.contentText:SetHeight("15")
     CheckButton:SetPoint("TOPLEFT", 5, -85)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
-    CheckButton:SetScript("OnClick", function() addonMain:getItemsCheckListFrame() end )
+    CheckButton:SetScript("OnClick", function() 
+        -- Migrate from checked boolean to nr of wanted items
+        for itemID, val in pairs(AIUCheckedData["checkItemIDs"]) do
+            if val == true then
+                AIUCheckedData["checkItemIDs"][itemID] = 1
+            end
+        end
+        addonMain:getItemsCheckListFrame()
+    end )
     addonMain:initializeConfig()
 end
 
