@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 0.8
+local AZPIUCheckListVersion = 0.7
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -212,70 +212,6 @@ function addonMain:getItemsCheckListFrame()
     itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", InstanceUtilityAddonFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
-
-    local ench = 0
-    local enchFrame = CreateFrame("Frame", "enchFrame", itemCheckListFrame)
-    enchFrame:SetPoint("TOPLEFT", 0, -20)
-    enchFrame.contentText = enchFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    enchFrame.contentText:SetPoint("CENTER")
-
-    --local _, _, _, _, _, Enchant, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-
-    -- 11 == ring1      12 == ring2     16 == MH    17 == OH (Sometime need to check OH...?)
-    -- GetItemInfo(), 7th return == itemType?
-    -- Ring Enchants
-    -- Crit -   Haste   -   Mast    -   Vers
-    -- 6108 -   6109    -   6110    -   6111
-    --
-    -- Wep Enchants
-    -- Heal -   Leech   -   Elem    -   AtkSpd  -   Vers    -   Haste   -   Mast    -   Crit    -   Armor
-    -- 5946 -   5948    -   5949    -   5950    -   5962    -   5963    -   5964    -   5965    -   5966
-
-    local itemText = "\124cFF00FF00All Best Enchants Detected!\124r"
-    local itemTextB = ""
-    local itemLink, enchantID
-
-    itemLink = GetInventoryItemLink("Player", 11)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
-        itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
-        itemTextB = "\124cFFFF0000Ring1\124r"
-    end
-
-    itemLink = GetInventoryItemLink("Player", 12)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
-        itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
-        itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
-    end
-
-    itemLink = GetInventoryItemLink("Player", 16)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" then
-        itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
-        itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
-    end
-
-    itemLink = GetInventoryItemLink("Player", 17)
-    if itemLink ~= nil then
-        local v1, v2, v3, v4, v5, v6, v7 = GetItemInfo(itemLink)
-        if v7 ~= "Miscellaneous" then
-            _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" then
-                itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
-                itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
-            end
-        end
-    end
-
-    if itemTextB ~= "" then
-        itemText = itemText .. "\n" .. itemTextB
-    end
-
-    enchFrame.contentText:SetText(itemText)
-    enchFrame:SetSize(400, 40)
-    enchFrame.contentText:SetSize(enchFrame:GetWidth(), enchFrame:GetHeight())
-
     for _, section in ipairs(itemData) do
         for _, stat in ipairs(section[2]) do
             for _, itemID in ipairs(stat[2]) do
@@ -284,7 +220,7 @@ function addonMain:getItemsCheckListFrame()
                     local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
                     parentFrame:SetSize(300, 20)
-                    parentFrame:SetPoint("TOPLEFT", 110, -20 * i - 40)
+                    parentFrame:SetPoint("TOPLEFT", 110, -20 * i - 5)
 
                     local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
                     itemCountLabel:SetSize(20, 15)
