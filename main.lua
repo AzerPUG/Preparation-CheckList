@@ -25,7 +25,7 @@ function AZP.IU.OnLoad:CheckList(self)
     CheckButton:SetHeight("25")
     CheckButton.contentText:SetWidth("100")
     CheckButton.contentText:SetHeight("15")
-    CheckButton:SetPoint("TOPLEFT", 5, -85)
+    CheckButton:SetPoint("TOPLEFT", 5, -100)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
     CheckButton:SetScript("OnClick", function() 
         -- Migrate from checked boolean to nr of wanted items
@@ -215,7 +215,7 @@ function addonMain:getItemsCheckListFrame()
 
     local ench = 0
     local enchFrame = CreateFrame("Frame", "enchFrame", itemCheckListFrame)
-    enchFrame:SetPoint("TOPLEFT", 0, -20)
+    enchFrame:SetPoint("TOPLEFT", 0, -30)
     enchFrame.contentText = enchFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     enchFrame.contentText:SetPoint("CENTER")
 
@@ -284,7 +284,7 @@ function addonMain:getItemsCheckListFrame()
                     local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
                     parentFrame:SetSize(300, 20)
-                    parentFrame:SetPoint("TOPLEFT", 110, -20 * i - 40)
+                    parentFrame:SetPoint("TOPLEFT", 115, -20 * i - 45)
 
                     local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
                     itemCountLabel:SetSize(20, 15)
