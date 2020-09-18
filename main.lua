@@ -52,15 +52,11 @@ function addonMain:ChangeOptionsText()
     CheckListSubPanelHeader:SetPoint("TOP", 0, -10)
 end
 
-function addonMain:initConfigSection()
-    addonMain:createTreeGroupList();
-end
-
 function addonMain:initializeConfig()
     if AIUCheckedData == nil then
         AIUCheckedData = initialConfig
     end
-    addonMain:initConfigSection()
+    addonMain:createTreeGroupList();
 end
 
 function AZP.IU.OnEvent:CheckList(event, ...)
@@ -133,7 +129,7 @@ function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     local itemCheckBox = CreateFrame("CheckButton", "itemCheckBox", parentFrame, "ChatConfigCheckButtonTemplate")
     itemCheckBox:SetSize(20, 20)
     itemCheckBox:SetPoint("LEFT", 5, 0)
-    itemCheckBox:SetHitRectInsets(0, 0, 0, 0);
+    itemCheckBox:SetHitRectInsets(0, 0, 0, 0)
 
     itemCheckBox:SetChecked(AIUCheckedData["checkItemIDs"][itemID])
     local itemCountEditBox
@@ -220,6 +216,7 @@ function addonMain:getItemsCheckListFrame()
     enchFrame.contentText:SetPoint("CENTER")
 
     --local _, _, _, _, _, Enchant, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
+    -- /script _, _, _, _, _, enchantID = string.find(GetInventoryItemLink("Player", 16), "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)"); print(enchantID);
 
     -- 11 == ring1      12 == ring2     16 == MH    17 == OH (Sometime need to check OH...?)
     -- GetItemInfo(), 7th return == itemType?
