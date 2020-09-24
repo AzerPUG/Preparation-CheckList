@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 0.9
+local AZPIUCheckListVersion = 0.10
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -28,7 +28,6 @@ function AZP.IU.OnLoad:CheckList(self)
     CheckButton:SetPoint("TOPLEFT", 5, -100)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
     CheckButton:SetScript("OnClick", function() 
-        -- Migrate from checked boolean to nr of wanted items
         for itemID, val in pairs(AIUCheckedData["checkItemIDs"]) do
             if val == true then
                 AIUCheckedData["checkItemIDs"][itemID] = 1
@@ -227,6 +226,10 @@ function addonMain:getItemsCheckListFrame()
     -- Wep Enchants
     -- Heal -   Leech   -   Elem    -   AtkSpd  -   Vers    -   Haste   -   Mast    -   Crit    -   Armor
     -- 5946 -   5948    -   5949    -   5950    -   5962    -   5963    -   5964    -   5965    -   5966
+    --
+    -- Wep Enchants - DK
+    -- Crusader -   Razorice    -   Gargoyle (2h)
+    -- 3368     -   3370        -   3847
 
     local itemText = "\124cFF00FF00All Best Enchants Detected!\124r"
     local itemTextB = ""
@@ -248,7 +251,7 @@ function addonMain:getItemsCheckListFrame()
 
     itemLink = GetInventoryItemLink("Player", 16)
     _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" then
+    if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" then
         itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
         itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
     end
@@ -258,7 +261,7 @@ function addonMain:getItemsCheckListFrame()
         local v1, v2, v3, v4, v5, v6, v7 = GetItemInfo(itemLink)
         if v7 ~= "Miscellaneous" then
             _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" then
+            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" and enchantID ~= "3368" and enchantID ~= "3370" then
                 itemText = "\124cFFFF0000Low/No Enchants Detected!\124r"
                 itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
             end
