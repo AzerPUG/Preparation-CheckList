@@ -283,34 +283,27 @@ function addonMain:getItemsCheckListFrame()
         itemLink = GetInventoryItemLink("Player", slotID)
         if itemLink ~= nil then
             local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-            --if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
-                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-                local itemTextC
-                if slotID == 6 then itemTextC = " \124cFFFF0000Waist\124r"
-                elseif slotID == 7 then
-                    itemTextC = " \124cFFFF0000Legs\124r"
-                    --if Gem1 == nil then print("Legs-G1 == Nil") end
-                    --if Gem1 == "" then print("Legs-G1 == \"\"") end
-                    --print ("testLegs: " .. Gem1)
-                    local _, itemID, enchantIDx, gemID1, gemID2, gemID3, gemID4, 
-  suffixID, uniqueID, linkLevel, specializationID, upgradeTypeID, instanceDifficultyID, numBonusIDs = strsplit(":", string.match(itemLink, "item[%-?%d:]+"))
-                    print("Legs-7: " .. numBonusIDs)
-                elseif slotID == 8 then
-                    itemTextC = " \124cFFFF0000Feet\124r"
-                    local _, itemID, enchantIDx, gemID1, gemID2, gemID3, gemID4, 
-  suffixID, uniqueID, linkLevel, specializationID, upgradeTypeID, instanceDifficultyID, numBonusIDs = strsplit(":", string.match(itemLink, "item[%-?%d:]+"))
-                    print("Feet-8: " .. numBonusIDs)
-                elseif slotID == 9 then
-                    itemTextC = " \124cFFFF0000Wrist\124r"
-                    --if Gem1 == nil then print("Wrist-G1 == Nil") end
-                    --if Gem1 == "" then print("Wrist-G1 == \"\"") end
-                    --print ("testWrist: " .. Gem1)
-                    local _, itemID, enchantIDx, gemID1, gemID2, gemID3, gemID4, 
-  suffixID, uniqueID, linkLevel, specializationID, upgradeTypeID, instanceDifficultyID, numBonusIDs = strsplit(":", string.match(itemLink, "item[%-?%d:]+"))
-                    print("Wrist-9: " .. numBonusIDs)
-                elseif slotID == 10 then itemTextC = " \124cFFFF0000Hands\124r" end
-                itemTextB = itemTextB .. itemTextC
-            --end
+            local stats =  GetItemStats(itemLink)
+            local socks
+            if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
+                socks = stats["EMPTY_SOCKET_PRISMATIC"]
+                if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
+                    itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+                    local itemTextC
+                    if slotID == 6 then 
+                        itemTextC = " \124cFFFF0000Waist\124r"
+                    elseif slotID == 7 then
+                        itemTextC = " \124cFFFF0000Legs\124r"
+                    elseif slotID == 8 then
+                        itemTextC = " \124cFFFF0000Feet\124r"
+                    elseif slotID == 9 then
+                        itemTextC = " \124cFFFF0000Wrist\124r"
+                    elseif slotID == 10 then 
+                        itemTextC = " \124cFFFF0000Hands\124r"
+                    end
+                    itemTextB = itemTextB .. itemTextC
+                end
+            end
         end
     end
 
