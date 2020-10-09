@@ -307,6 +307,34 @@ function addonMain:getItemsCheckListFrame()
         end
     end
 
+    itemLink = GetInventoryItemLink("Player", 16)
+    if itemLink ~= nil then
+        local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
+        local stats =  GetItemStats(itemLink)
+        local socks
+        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
+            socks = stats["EMPTY_SOCKET_PRISMATIC"]
+            if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
+                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+                itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
+            end
+        end
+    end
+    
+    itemLink = GetInventoryItemLink("Player", 17)
+    if itemLink ~= nil then
+        local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
+        local stats =  GetItemStats(itemLink)
+        local socks
+        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
+            socks = stats["EMPTY_SOCKET_PRISMATIC"]
+            if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
+                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+                itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
+            end
+        end
+    end
+
     if itemTextB ~= "" then
         itemText = itemText .. "\n" .. itemTextB
     end
