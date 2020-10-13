@@ -1,11 +1,13 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 0.11
+local AZPIUCheckListVersion = 12
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
 local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
 local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", "AceConsole-3.0")
+
+local ModuleStats = AZP.IU.ModuleStats
 
 local itemCheckListFrame
 local itemData = AIU.itemData
@@ -18,14 +20,16 @@ end
 function AZP.IU.OnLoad:CheckList(self)
     addonMain:ChangeOptionsText()
 
-    CheckButton = CreateFrame("Button", "CheckButton", InstanceUtilityAddonFrame, "UIPanelButtonTemplate")
+    ModuleStats["Frames"]["CheckList"]:SetSize(400, 250)
+
+    CheckButton = CreateFrame("Button", nil, ModuleStats["Frames"]["CheckList"], "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     CheckButton.contentText:SetText("Check Items!")
     CheckButton:SetWidth("100")
     CheckButton:SetHeight("25")
     CheckButton.contentText:SetWidth("100")
     CheckButton.contentText:SetHeight("15")
-    CheckButton:SetPoint("TOPLEFT", 5, -100)
+    CheckButton:SetPoint("TOPLEFT", 5, -5)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
     CheckButton:SetScript("OnClick", function() 
         for itemID, val in pairs(AIUCheckedData["checkItemIDs"]) do
@@ -204,7 +208,7 @@ function addonMain:getItemsCheckListFrame()
         itemCheckListFrame:Hide()
         itemCheckListFrame:SetParent(nil)
     end
-    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", InstanceUtilityAddonFrame)
+    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", ModuleStats["Frames"]["CheckList"])
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
 
@@ -274,7 +278,6 @@ function addonMain:getItemsCheckListFrame()
                 itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
                 itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
             end
-            
         end
     end
                     -- items with sockets should have a bonus ID that shows the socket.
