@@ -249,26 +249,32 @@ function addonMain:getItemsCheckListFrame()
     local itemLink, enchantID
 
     itemLink = GetInventoryItemLink("Player", 11)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
-        itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-        itemTextB = "\124cFFFF0000Ring1\124r"
+    if itemLink ~= nil then
+        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+        if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
+            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+            itemTextB = "\124cFFFF0000Ring1\124r"
+        end
     end
 
     itemLink = GetInventoryItemLink("Player", 12)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
-        itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-        itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
+    if itemLink ~= nil then
+        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+        if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
+            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+            itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
+        end
     end
 
     itemLink = GetInventoryItemLink("Player", 16)
-    _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-    if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" then
-        itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-        itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
+    if itemLink ~= nil then
+        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+        if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" then
+            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+            itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
+        end
     end
-
+    
     itemLink = GetInventoryItemLink("Player", 17)
     if itemLink ~= nil then
         local _, _, _, _, _, _, v7 = GetItemInfo(itemLink)
