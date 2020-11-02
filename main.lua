@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 14
+local AZPIUCheckListVersion = 15
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -241,8 +241,8 @@ function addonMain:getItemsCheckListFrame()
     -- 5946 -   5948    -   5949    -   5950    -   5962    -   5963    -   5964    -   5965    -   5966
     --
     -- Wep Enchants - DK
-    -- Crusader -   Razorice    -   Gargoyle (2h)
-    -- 3368     -   3370        -   3847
+    -- Crusader -   Razorice    -   Gargoyle (2h)   -   Sanguination    -   Apocalypse      -   Thirst
+    -- 3368     -   3370        -   3847            -   6241            -   6245            -   6244
 
     local itemText = "\124cFF00FF00All Best Enchants/Gems Detected!\124r"
     local itemTextB = ""
@@ -269,18 +269,18 @@ function addonMain:getItemsCheckListFrame()
     itemLink = GetInventoryItemLink("Player", 16)
     if itemLink ~= nil then
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" then
+        if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
             itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
         end
     end
-    
+
     itemLink = GetInventoryItemLink("Player", 17)
     if itemLink ~= nil then
         local _, _, _, _, _, _, v7 = GetItemInfo(itemLink)
         if v7 ~= "Miscellaneous" then
             _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" and enchantID ~= "3368" and enchantID ~= "3370" then
+            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
                 itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
                 itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
             end
