@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 18
+local AZPIUCheckListVersion = 19
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -287,7 +287,7 @@ function addonMain:getItemsCheckListFrame()
         end
     end
                     -- items with sockets should have a bonus ID that shows the socket.
-                    --  See https://www.reddit.com/r/wowaddons/comments/3052t8/help_simple_addon_to_return_itemids_bonus_list/
+                    -- See https://www.reddit.com/r/wowaddons/comments/3052t8/help_simple_addon_to_return_itemids_bonus_list/
     for slotID = 6, 10 do
         itemLink = GetInventoryItemLink("Player", slotID)
         if itemLink ~= nil then
@@ -329,7 +329,7 @@ function addonMain:getItemsCheckListFrame()
             end
         end
     end
-    
+
     itemLink = GetInventoryItemLink("Player", 17)
     if itemLink ~= nil then
         local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
