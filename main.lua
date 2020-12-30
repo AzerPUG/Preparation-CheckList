@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 20
+local AZPIUCheckListVersion = 21
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -230,23 +230,38 @@ function addonMain:getItemsCheckListFrame()
     --  GemsSStats:     Crit       Mast        Haste       Vers
     --  GemIDs:         168639     168640      168641      168642
 
-    -- 11 == ring1      12 == ring2     16 == MH    17 == OH (Sometime need to check OH...?)
-    -- GetItemInfo(), 7th return == itemType?
-    -- Ring Enchants
+    -- Ring Enchants (SlotID: 11/12)
     -- Crit -   Haste   -   Mast    -   Vers
-    -- 6108 -   6109    -   6110    -   6111
+    -- 6164 -   6166    -   ????    -   6170
     --
-    -- Wep Enchants
-    -- Heal -   Leech   -   Elem    -   AtkSpd  -   Vers    -   Haste   -   Mast    -   Crit    -   Armor
-    -- 5946 -   5948    -   5949    -   5950    -   5962    -   5963    -   5964    -   5965    -   5966
+    -- Wep Enchants (SlotID: 16/17)
+    -- Stats    -   ConeDPS -   Heal    -   HealTaken   -   DmgIncrease
+    -- 6229     -   6223    -   6226    -   ????        -   6229
     --
-    -- Wep Enchants - DK
+    -- Wep Enchants - DK (SlotID: 16/17)
     -- Crusader -   Razorice    -   Gargoyle (2h)   -   Sanguination    -   Apocalypse      -   Thirst
     -- 3368     -   3370        -   3847            -   6241            -   6245            -   6244
+    --
+    -- Chest Enchants (SlotID: 5)
+    -- Stats    -   Dmg     -   IntDmg  -   Mana    -   Armor
+    -- 6230     -   6214    -   ????    -   ????    -   ????
+    --
+    -- Cloak Enchants  (SlotID: 15)
+    -- Stam -   StamSpeed   -   StamLeech   -   StamAvoid
+    -- ???? -   6202        -   6204        -   6203
 
     local itemText = "\124cFF00FF00All Best Enchants/Gems Detected!\124r"
     local itemTextB = ""
     local itemLink, enchantID
+
+    itemLink = GetInventoryItemLink("Player", 5)
+    if itemLink ~= nil then
+        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+        if enchantID ~= "6230" and enchantID ~= "6214" then
+            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+            itemTextB = "\124cFFFF0000Ring1\124r"
+        end
+    end
 
     itemLink = GetInventoryItemLink("Player", 11)
     if itemLink ~= nil then
@@ -263,6 +278,15 @@ function addonMain:getItemsCheckListFrame()
         if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
             itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
+        end
+    end
+
+    itemLink = GetInventoryItemLink("Player", 15)
+    if itemLink ~= nil then
+        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+        if enchantID ~= "6202" and enchantID ~= "6204" and enchantID ~= "6203" then
+            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+            itemTextB = "\124cFFFF0000Ring1\124r"
         end
     end
 
