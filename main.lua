@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 21
+local AZPIUCheckListVersion = 22
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -214,7 +214,7 @@ function addonMain:getItemsCheckListFrame()
 
     local ench = 0
     local enchFrame = CreateFrame("Frame", "enchFrame", itemCheckListFrame)
-    enchFrame:SetPoint("TOPLEFT", 0, -30)
+    enchFrame:SetPoint("TOPLEFT")
     enchFrame.contentText = enchFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     enchFrame.contentText:SetPoint("CENTER")
 
@@ -384,7 +384,7 @@ function addonMain:getItemsCheckListFrame()
                     local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
                     parentFrame:SetSize(300, 20)
-                    parentFrame:SetPoint("TOPLEFT", 115, -20 * i - 45)
+                    parentFrame:SetPoint("TOPLEFT", 15, -20 * i - 15)
 
                     local itemCountLabel = CreateFrame("Frame", "itemCountLabel", parentFrame)
                     itemCountLabel:SetSize(20, 15)
