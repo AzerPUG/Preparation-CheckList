@@ -1,6 +1,6 @@
 local GlobalAddonName, AIU = ...
 
-local AZPIUCheckListVersion = 22
+local AZPIUCheckListVersion = 23
 local dash = " - "
 local name = "InstanceUtility" .. dash .. "CheckList"
 local nameFull = ("AzerPUG " .. name)
@@ -224,11 +224,8 @@ function addonMain:getItemsCheckListFrame()
 
     -- /script _, _, _, _, _, enchantID = string.find(GetInventoryItemLink("Player", 16), "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)"); print(enchantID);
 
-    --  GemsMStats:     int80       Int120      agi80       agi120      str80       str120
-    --  GemIDs:         153709      168638      153708      168637      153707      168636
-
     --  GemsSStats:     Crit       Mast        Haste       Vers
-    --  GemIDs:         168639     168640      168641      168642
+    --  GemIDs:         ??????     ??????      ??????      ??????
 
     -- Ring Enchants (SlotID: 11/12)
     -- Crit -   Haste   -   Mast    -   Vers
@@ -259,23 +256,23 @@ function addonMain:getItemsCheckListFrame()
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
         if enchantID ~= "6230" and enchantID ~= "6214" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = "\124cFFFF0000Ring1\124r"
+            itemTextB = itemTextB .. " \124cFFFF0000Chest\124r"
         end
     end
 
     itemLink = GetInventoryItemLink("Player", 11)
     if itemLink ~= nil then
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
+        if enchantID ~= "6164" and enchantID ~= "6166" and enchantID ~= "6170" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = "\124cFFFF0000Ring1\124r"
+            itemTextB = itemTextB .. " \124cFFFF0000Ring1\124r"
         end
     end
 
     itemLink = GetInventoryItemLink("Player", 12)
     if itemLink ~= nil then
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6108" and enchantID ~= "6109" and enchantID ~= "6110" and enchantID ~= "6111" then
+        if enchantID ~= "6164" and enchantID ~= "6166" and enchantID ~= "6170" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
             itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
         end
@@ -286,14 +283,14 @@ function addonMain:getItemsCheckListFrame()
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
         if enchantID ~= "6202" and enchantID ~= "6204" and enchantID ~= "6203" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = "\124cFFFF0000Ring1\124r"
+            itemTextB = itemTextB .. " \124cFFFF0000Ring1\124r"
         end
     end
 
     itemLink = GetInventoryItemLink("Player", 16)
     if itemLink ~= nil then
         _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966"  and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
+        if enchantID ~= "6229" and enchantID ~= "6223" and enchantID ~= "6226" and enchantID ~= "6229" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
             itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
             itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
         end
@@ -304,14 +301,13 @@ function addonMain:getItemsCheckListFrame()
         local _, _, _, _, _, _, v7 = GetItemInfo(itemLink)
         if v7 ~= "Miscellaneous" then
             _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-            if enchantID ~= "5946" and enchantID ~= "5948" and enchantID ~= "5949" and enchantID ~= "5950" and enchantID ~= "5962" and enchantID ~= "5963" and enchantID ~= "5964" and enchantID ~= "5965" and enchantID ~= "5966" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
+            if enchantID ~= "6229" and enchantID ~= "6223" and enchantID ~= "6226" and enchantID ~= "6229" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
                 itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
                 itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
             end
         end
     end
-                    -- items with sockets should have a bonus ID that shows the socket.
-                    -- See https://www.reddit.com/r/wowaddons/comments/3052t8/help_simple_addon_to_return_itemids_bonus_list/
+
     for slotID = 6, 10 do
         itemLink = GetInventoryItemLink("Player", slotID)
         if itemLink ~= nil then
@@ -345,7 +341,7 @@ function addonMain:getItemsCheckListFrame()
         local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
         local stats =  GetItemStats(itemLink)
         local socks
-        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
+        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then
             socks = stats["EMPTY_SOCKET_PRISMATIC"]
             if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
                 itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
