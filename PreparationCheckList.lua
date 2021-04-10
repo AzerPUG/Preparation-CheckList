@@ -9,27 +9,26 @@ if AZP.PreparationChecklist == nil then AZP.PreparationChecklist = {} end
 
 local AZPIUCheckListVersion = 24
 local dash = " - "
-local name = "InstanceUtility" .. dash .. "CheckList"
+local name = "Preparation CheckList"
 local nameFull = ("AzerPUG " .. name)
 local promo = (nameFull .. dash ..  AZPIUCheckListVersion)
-local addonMain = LibStub("AceAddon-3.0"):NewAddon("InstanceUtility-CheckList", "AceConsole-3.0")
 
-local ModuleStats = AZP.IU.ModuleStats
+local ModuleStats = AZP.Core.ModuleStats    -- Change to Direct Call!
 
 local itemCheckListFrame
 local itemData = AIU.itemData
 local initialConfig = AIU.initialConfig
 
-function AZP.IU.VersionControl:CheckList()
+function AZP.VersionControl:PreparationCheckList()
     return AZPIUCheckListVersion
 end
 
-function AZP.IU.OnLoad:CheckList(self)
-    addonMain:ChangeOptionsText()
+function AZP.OnLoad:PreparationCheckList(self)
+    AZP.PreparationCheckList:ChangeOptionsText()
 
-    ModuleStats["Frames"]["CheckList"]:SetSize(400, 250)
+    ModuleStats["Frames"]["PreparationCheckList"]:SetSize(400, 250)
 
-    CheckButton = CreateFrame("Button", nil, ModuleStats["Frames"]["CheckList"], "UIPanelButtonTemplate")
+    CheckButton = CreateFrame("Button", nil, ModuleStats["Frames"]["PreparationCheckList"], "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     CheckButton.contentText:SetText("Check Items!")
     CheckButton:SetWidth("100")
@@ -44,12 +43,12 @@ function AZP.IU.OnLoad:CheckList(self)
                 AIUCheckedData["checkItemIDs"][itemID] = 1
             end
         end
-        addonMain:getItemsCheckListFrame()
+        AZP.PreparationCheckList:getItemsCheckListFrame()
     end )
-    addonMain:initializeConfig()
+    AZP.PreparationCheckList:initializeConfig()
 end
 
-function addonMain:ChangeOptionsText()
+function AZP.PreparationCheckList:ChangeOptionsText()
     CheckListSubPanelPHTitle:Hide()
     CheckListSubPanelPHText:Hide()
     CheckListSubPanelPHTitle:SetParent(nil)
@@ -62,17 +61,17 @@ function addonMain:ChangeOptionsText()
     CheckListSubPanelHeader:SetPoint("TOP", 0, -10)
 end
 
-function addonMain:initializeConfig()
+function AZP.PreparationCheckList:initializeConfig()
     if AIUCheckedData == nil then
         AIUCheckedData = initialConfig
     end
-    addonMain:createTreeGroupList();
+    AZP.PreparationCheckList:createTreeGroupList();
 end
 
-function AZP.IU.OnEvent:CheckList(event, ...)
+function AZP.OnEvent:PreparationCheckList(event, ...)
 end
 
-function addonMain:createTreeGroupList()
+function AZP.PreparationCheckList:createTreeGroupList()
     local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", CheckListSubPanel, "UIPanelScrollFrameTemplate");
     scrollFrame:SetSize(600, 500)
     scrollFrame:SetPoint("TOPLEFT", -2, -60)
@@ -113,29 +112,29 @@ function addonMain:createTreeGroupList()
                 local parentFrame = CreateFrame("Frame", "parentFrame", sectionFrame)
                 parentFrame:SetSize(500,20)
                 parentFrame:SetPoint("TOPLEFT", 25, i * -20 + 5)
-                addonMain:tryGetItemID(itemID, parentFrame)
+                AZP.PreparationCheckList:tryGetItemID(itemID, parentFrame)
             end
         end
     end
 end
 
-function addonMain:tryGetItemID(itemID, parentFrame)
+function AZP.PreparationCheckList:tryGetItemID(itemID, parentFrame)
     local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
     if itemName == nil then
         AZP.AddonHelper:DelayedExecution(5, (function()
             itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
             if itemName == nil then
-                addonMain:tryGetItemID(itemID, parentFrame)
+                AZP.PreparationCheckList:tryGetItemID(itemID, parentFrame)
             else
-                addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
+                AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
             end
         end))
     else
-        addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
+        AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     end
 end
 
-function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
+function AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     local itemCheckBox = CreateFrame("CheckButton", "itemCheckBox", parentFrame, "ChatConfigCheckButtonTemplate")
     itemCheckBox:SetSize(20, 20)
     itemCheckBox:SetPoint("LEFT", 5, 0)
@@ -209,13 +208,13 @@ function addonMain:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
-function addonMain:getItemsCheckListFrame()
+function AZP.PreparationCheckList:getItemsCheckListFrame()
     local i = 0
     if itemCheckListFrame ~= nil then
         itemCheckListFrame:Hide()
         itemCheckListFrame:SetParent(nil)
     end
-    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", ModuleStats["Frames"]["CheckList"])
+    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", ModuleStats["Frames"]["PreparationCheckList"])
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
 
