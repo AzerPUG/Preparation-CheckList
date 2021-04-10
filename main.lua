@@ -1,4 +1,11 @@
-local GlobalAddonName, AIU = ...
+if AZP == nil then AZP = {} end
+if AZP.VersionControl == nil then AZP.VersionControl = {} end
+if AZP.OnLoad == nil then AZP.OnLoad = {} end
+if AZP.OnEvent == nil then AZP.OnEvent = {} end
+if AZP.OnEvent == nil then AZP.OnEvent = {} end
+
+AZP.VersionControl.PreparationCheckList = 24
+if AZP.PreparationChecklist == nil then AZP.PreparationChecklist = {} end
 
 local AZPIUCheckListVersion = 24
 local dash = " - "
