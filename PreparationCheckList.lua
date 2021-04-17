@@ -46,7 +46,7 @@ function AZP.PreparationCheckList:OnLoadSelf()
 
     -- Remove button and make dynamic. On bag change event, maybe?
     -- create frame for Preparation CheckList non-core
-    CheckButton = CreateFrame("Button", nil, AZP.Core.ModuleStats["Frames"]["PreparationCheckList"], "UIPanelButtonTemplate")
+    CheckButton = CreateFrame("Button", nil, AZP.Core.AddOns.PCL.MainFrame, "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     CheckButton.contentText:SetText("Check Items!")
     CheckButton:SetWidth("100")
@@ -100,7 +100,7 @@ function AZP.PreparationCheckList:createTreeGroupList()
     scrollFrame:SetScrollChild(scrollPanel)
     local lastFrame = nil
 
-    for _, itemSections in ipairs(AZP.Core.itemData) do
+    for _, itemSections in ipairs(AZP.itemData) do
         local sectionHeaderFrame = CreateFrame("Frame", "sectionHeaderFrame", scrollPanel)
         sectionHeaderFrame.contentText = sectionHeaderFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
         sectionHeaderFrame.contentText:SetPoint("TOPLEFT", 10, 0)
@@ -233,7 +233,7 @@ function AZP.PreparationCheckList:getItemsCheckListFrame()
         itemCheckListFrame:Hide()
         itemCheckListFrame:SetParent(nil)
     end
-    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", AZP.Core.ModuleStats["Frames"]["PreparationCheckList"])
+    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", AZP.Core.AddOns.PCL.MainFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
 
@@ -397,7 +397,7 @@ function AZP.PreparationCheckList:getItemsCheckListFrame()
     enchFrame:SetSize(400, 40)
     enchFrame.contentText:SetSize(enchFrame:GetWidth(), enchFrame:GetHeight())
 
-    for _, section in ipairs(AZP.Core.itemData) do
+    for _, section in ipairs(AZP.itemData) do
         for _, stat in ipairs(section[2]) do
             for _, itemID in ipairs(stat[2]) do
                 if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
