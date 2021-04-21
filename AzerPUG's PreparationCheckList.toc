@@ -7,4 +7,5 @@
 ## SavedVariablesPerCharacter: AIUCheckedData
 
 dataTables.lua
+SlashCommands.lua
 PreparationCheckList.lua

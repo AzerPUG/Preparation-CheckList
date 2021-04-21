@@ -460,3 +460,11 @@ end
 if not IsAddOnLoaded("AzerPUG's Core") then
     AZP.PreparationCheckList:OnLoadSelf()
 end
+
+AZP.SlashCommands["PCL"] = function()
+    if PreparationCheckListSelfFrame ~= nil then PreparationCheckListSelfFrame:Show() end
+end
+
+AZP.SlashCommands["pcl"] = AZP.SlashCommands["PCL"]
+AZP.SlashCommands["check"] = AZP.SlashCommands["PCL"]
+AZP.SlashCommands["preparation check list"] = AZP.SlashCommands["PCL"]
