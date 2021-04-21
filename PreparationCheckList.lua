@@ -5,48 +5,16 @@ if AZP.OnEvent == nil then AZP.OnEvent = {} end
 if AZP.OnEvent == nil then AZP.OnEvent = {} end
 
 AZP.VersionControl.PreparationCheckList = 24
-if AZP.PreparationChecklist == nil then AZP.PreparationChecklist = {} end
+if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 
 local itemCheckListFrame
 local AZPPCLSelfOptionPanel = nil
 local optionHeader = "|cFF00FFFFPreparation CheckList|r"
-
-function AZP.VersionControl:PreparationCheckList()
-    return AZP.VersionControl.PreparationCheckList
-end
-
-function AZP.PreparationCheckList:OnLoadBoth()
-
-end
-
-function AZP.PreparationCheckList:OnLoadCore()
-    AZP.PreparationCheckList:OnLoadBoth()
-
-    AZP.OptionsPanels:Generic("Preparation CheckList", optionHeader, function (frame)
-        AZP.PreparationCheckList:FillOptionsPanel(frame)
-    end)
-end
-
-function AZP.PreparationCheckList:OnLoadSelf()
-    AZPPCLSelfOptionPanel = CreateFrame("FRAME", nil)
-    AZPPCLSelfOptionPanel.name = optionHeader
-    InterfaceOptions_AddCategory(AZPPCLSelfOptionPanel)
-    AZPPCLSelfOptionPanel.header = AZPPCLSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
-    AZPPCLSelfOptionPanel.header:SetPoint("TOP", 0, -10)
-    AZPPCLSelfOptionPanel.header:SetText("|cFF00FFFFAzerPUG's Preparation CheckList Options!|r")
-
-    AZPPCLSelfOptionPanel.footer = AZPPCLSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    AZPPCLSelfOptionPanel.footer:SetPoint("TOP", 0, -300)
-    AZPPCLSelfOptionPanel.footer:SetText(
-        "|cFF00FFFFAzerPUG Links:\n" ..
-        "Website: www.azerpug.com\n" ..
-        "Discord: www.azerpug.com/discord\n" ..
-        "Twitch: www.twitch.tv/azerpug\n|r"
-    )
-
-    -- Remove button and make dynamic. On bag change event, maybe?
+local PreparationCheckListSelfFrame
+function AZP.PreparationCheckList:OnLoadBoth(frame)
+ -- Remove button and make dynamic. On bag change event, maybe?
     -- create frame for Preparation CheckList non-core
-    CheckButton = CreateFrame("Button", nil, AZP.Core.ModuleStats["Frames"]["PreparationCheckList"], "UIPanelButtonTemplate")
+    CheckButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     CheckButton.contentText:SetText("Check Items!")
     CheckButton:SetWidth("100")
@@ -61,10 +29,61 @@ function AZP.PreparationCheckList:OnLoadSelf()
                 AIUCheckedData["checkItemIDs"][itemID] = 1
             end
         end
-        AZP.PreparationCheckList:getItemsCheckListFrame()
+        AZP.PreparationCheckList:getItemsCheckListFrame(frame)
     end )
-    AZP.PreparationCheckList:initializeConfig()
-    AZP.PreparationCheckList:OnLoadBoth()
+end
+
+function AZP.PreparationCheckList:OnLoadCore()
+    AZP.PreparationCheckList:OnLoadBoth(AZP.Core.AddOns.PCL.MainFrame)
+
+    AZP.OptionsPanels:Generic("Preparation CheckList", optionHeader, function (frame)
+        AZP.PreparationCheckList:initializeConfig(frame)
+    end)
+end
+
+
+
+function AZP.PreparationCheckList:OnLoadSelf()
+    AZPPCLSelfOptionPanel = CreateFrame("FRAME", nil)
+    AZPPCLSelfOptionPanel.name = optionHeader
+    InterfaceOptions_AddCategory(AZPPCLSelfOptionPanel)
+    AZPPCLSelfOptionPanel.header = AZPPCLSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
+    AZPPCLSelfOptionPanel.header:SetPoint("TOP", 0, -10)
+    AZPPCLSelfOptionPanel.header:SetText("|cFF00FFFFAzerPUG's Preparation CheckList Options!|r")
+
+    -- AZPPCLSelfOptionPanel.footer = AZPPCLSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    -- AZPPCLSelfOptionPanel.footer:SetPoint("TOP", 0, -300)
+    -- AZPPCLSelfOptionPanel.footer:SetText(
+    --     "|cFF00FFFFAzerPUG Links:\n" ..
+    --     "Website: www.azerpug.com\n" ..
+    --     "Discord: www.azerpug.com/discord\n" ..
+    --     "Twitch: www.twitch.tv/azerpug\n|r"
+    -- )
+
+    PreparationCheckListSelfFrame = CreateFrame("FRAME", nil, UIParent, "BackdropTemplate")
+    PreparationCheckListSelfFrame:SetBackdrop({
+            bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+            edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+            edgeSize = 12,
+            insets = { left = 1, right = 1, top = 1, bottom = 1 },
+        })
+    PreparationCheckListSelfFrame:SetBackdropColor(0.75, 0.75, 0.75, 0.5)
+    PreparationCheckListSelfFrame:SetSize(325, 220)
+    PreparationCheckListSelfFrame:SetPoint("CENTER", 0, 0)
+    PreparationCheckListSelfFrame:SetScript("OnDragStart", PreparationCheckListSelfFrame.StartMoving)
+    PreparationCheckListSelfFrame:SetScript("OnDragStop", PreparationCheckListSelfFrame.StopMovingOrSizing)
+    PreparationCheckListSelfFrame:RegisterForDrag("LeftButton")
+    PreparationCheckListSelfFrame:EnableMouse(true)
+    PreparationCheckListSelfFrame:SetMovable(true)
+
+    local IUAddonFrameCloseButton = CreateFrame("Button", nil, PreparationCheckListSelfFrame, "UIPanelCloseButton")
+    IUAddonFrameCloseButton:SetSize(20, 21)
+    IUAddonFrameCloseButton:SetPoint("TOPRIGHT", PreparationCheckListSelfFrame, "TOPRIGHT", 2, 2)
+    IUAddonFrameCloseButton:SetScript("OnClick", function() PreparationCheckListSelfFrame:Hide() end )
+
+
+    AZP.PreparationCheckList:initializeConfig(AZPPCLSelfOptionPanel)
+    AZP.PreparationCheckList:OnLoadBoth(PreparationCheckListSelfFrame)
 end
 
 function AZP.PreparationCheckList:ChangeOptionsText()
@@ -80,18 +99,18 @@ function AZP.PreparationCheckList:ChangeOptionsText()
     CheckListSubPanelHeader:SetPoint("TOP", 0, -10)
 end
 
-function AZP.PreparationCheckList:initializeConfig()
+function AZP.PreparationCheckList:initializeConfig(panel)
     if AIUCheckedData == nil then
         AIUCheckedData = AZP.PreparationChecklist.initialConfig
     end
-    AZP.PreparationCheckList:createTreeGroupList();
+    AZP.PreparationCheckList:createTreeGroupList(panel);
 end
 
 function AZP.OnEvent:PreparationCheckList(event, ...)
 end
 
-function AZP.PreparationCheckList:createTreeGroupList()
-    local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", CheckListSubPanel, "UIPanelScrollFrameTemplate");
+function AZP.PreparationCheckList:createTreeGroupList(panel)
+    local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", panel, "UIPanelScrollFrameTemplate");
     scrollFrame:SetSize(600, 500)
     scrollFrame:SetPoint("TOPLEFT", -2, -60)
     local scrollPanel = CreateFrame("Frame", "scrollPanel")
@@ -100,7 +119,7 @@ function AZP.PreparationCheckList:createTreeGroupList()
     scrollFrame:SetScrollChild(scrollPanel)
     local lastFrame = nil
 
-    for _, itemSections in ipairs(AZP.Core.itemData) do
+    for _, itemSections in ipairs(AZP.itemData) do
         local sectionHeaderFrame = CreateFrame("Frame", "sectionHeaderFrame", scrollPanel)
         sectionHeaderFrame.contentText = sectionHeaderFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
         sectionHeaderFrame.contentText:SetPoint("TOPLEFT", 10, 0)
@@ -137,17 +156,22 @@ function AZP.PreparationCheckList:createTreeGroupList()
     end
 end
 
+function AZP.PreparationCheckList:GetItemNameAndIcon(itemID)
+    local itemName, _, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
+    return itemName, itemIcon
+end
+
 function AZP.PreparationCheckList:tryGetItemID(itemID, parentFrame)
-    local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
+    local itemName, itemIcon = AZP.PreparationCheckList:GetItemNameAndIcon(itemID)
     if itemName == nil then
-        AZP.AddonHelper:DelayedExecution(5, (function()
-            itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
+        C_Timer.After(5, function()
+            itemName, itemIcon = AZP.PreparationCheckList:GetItemNameAndIcon(itemID)
             if itemName == nil then
                 AZP.PreparationCheckList:tryGetItemID(itemID, parentFrame)
             else
                 AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
             end
-        end))
+        end)
     else
         AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName, itemIcon)
     end
@@ -227,13 +251,13 @@ function AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName
     itemNameLabel:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
-function AZP.PreparationCheckList:getItemsCheckListFrame()
+function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     local i = 0
     if itemCheckListFrame ~= nil then
         itemCheckListFrame:Hide()
         itemCheckListFrame:SetParent(nil)
     end
-    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", AZP.Core.ModuleStats["Frames"]["PreparationCheckList"])
+    itemCheckListFrame = CreateFrame("Frame", "itemCheckListFrame", mainFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
 
@@ -397,12 +421,12 @@ function AZP.PreparationCheckList:getItemsCheckListFrame()
     enchFrame:SetSize(400, 40)
     enchFrame.contentText:SetSize(enchFrame:GetWidth(), enchFrame:GetHeight())
 
-    for _, section in ipairs(AZP.Core.itemData) do
+    for _, section in ipairs(AZP.itemData) do
         for _, stat in ipairs(section[2]) do
             for _, itemID in ipairs(stat[2]) do
                 if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
                     i = i + 1
-                    local itemName, itemIcon = AZP.AddonHelper:GetItemNameAndIcon(itemID)
+                    local itemName, itemIcon = AZP.PreparationCheckList:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
                     parentFrame:SetSize(300, 20)
                     parentFrame:SetPoint("TOPLEFT", 15, -20 * i - 15)
@@ -455,6 +479,10 @@ function AZP.PreparationCheckList:getItemsCheckListFrame()
             end
         end
     end
+end
+
+function AZP.PreparationCheckList:FillOptionsPanel(frameToFill)
+
 end
 
 if not IsAddOnLoaded("AzerPUG's Core") then
