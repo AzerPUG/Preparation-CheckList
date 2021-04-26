@@ -1,16 +1,17 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
-if AZP.OnLoad == nil then AZP.OnLoad = {} end
-if AZP.OnEvent == nil then AZP.OnEvent = {} end
-if AZP.OnEvent == nil then AZP.OnEvent = {} end
 
-AZP.VersionControl.PreparationCheckList = 24
+AZP.VersionControl["Preparation CheckList"] = 24
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 
 local itemCheckListFrame
 local AZPPCLSelfOptionPanel = nil
+local optionPanel = nil
 local optionHeader = "|cFF00FFFFPreparation CheckList|r"
 local PreparationCheckListSelfFrame
+local EventFrame, UpdateFrame
+local HaveShowedUpdateNotification = false
+
 function AZP.PreparationCheckList:OnLoadBoth(frame)
  -- Remove button and make dynamic. On bag change event, maybe?
     -- create frame for Preparation CheckList non-core
@@ -24,9 +25,9 @@ function AZP.PreparationCheckList:OnLoadBoth(frame)
     CheckButton:SetPoint("TOPLEFT", 5, -5)
     CheckButton.contentText:SetPoint("CENTER", 0, -1)
     CheckButton:SetScript("OnClick", function() 
-        for itemID, val in pairs(AIUCheckedData["checkItemIDs"]) do
+        for itemID, val in pairs(AZPPCLCheckedData["checkItemIDs"]) do
             if val == true then
-                AIUCheckedData["checkItemIDs"][itemID] = 1
+                AZPPCLCheckedData["checkItemIDs"][itemID] = 1
             end
         end
         AZP.PreparationCheckList:getItemsCheckListFrame(frame)
@@ -35,15 +36,42 @@ end
 
 function AZP.PreparationCheckList:OnLoadCore()
     AZP.PreparationCheckList:OnLoadBoth(AZP.Core.AddOns.PCL.MainFrame)
+    AZP.Core:RegisterEvents("VARIABLES_LOADED", function() AZP.PreparationCheckList:eventVariablesLoaded() end)
 
-    AZP.OptionsPanels:Generic("Preparation CheckList", optionHeader, function (frame)
-        AZP.PreparationCheckList:initializeConfig(frame)
+    AZP.OptionsPanels:RemovePanel("Preparation CheckList")
+    AZP.OptionsPanels:Generic("Preparation CheckList", optionHeader, function(frame)
+        AZP.PreparationCheckList:FillOptionsPanel(frame)
     end)
 end
 
-
-
 function AZP.PreparationCheckList:OnLoadSelf()
+    C_ChatInfo.RegisterAddonMessagePrefix("AZPVERSIONS")
+
+    EventFrame = CreateFrame("Frame")
+    EventFrame:SetScript("OnEvent", function(...) AZP.PreparationCheckList:OnEvent(...) end)
+    EventFrame:RegisterEvent("VARIABLES_LOADED")
+    EventFrame:RegisterEvent("CHAT_MSG_ADDON")
+
+    UpdateFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+    UpdateFrame:SetPoint("CENTER", 0, 250)
+    UpdateFrame:SetSize(400, 200)
+    UpdateFrame:SetBackdrop({
+        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+        edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 },
+    })
+    UpdateFrame:SetBackdropColor(0.25, 0.25, 0.25, 0.80)
+    UpdateFrame.header = UpdateFrame:CreateFontString("UpdateFrame", "ARTWORK", "GameFontNormalHuge")
+    UpdateFrame.header:SetPoint("TOP", 0, -10)
+    UpdateFrame.header:SetText("|cFFFF0000AzerPUG's Preparation CheckList is out of date!|r")
+
+    UpdateFrame.text = UpdateFrame:CreateFontString("UpdateFrame", "ARTWORK", "GameFontNormalLarge")
+    UpdateFrame.text:SetPoint("TOP", 0, -40)
+    UpdateFrame.text:SetText("Error!")
+
+    UpdateFrame:Hide()
+
     AZPPCLSelfOptionPanel = CreateFrame("FRAME", nil)
     AZPPCLSelfOptionPanel.name = optionHeader
     InterfaceOptions_AddCategory(AZPPCLSelfOptionPanel)
@@ -82,31 +110,8 @@ function AZP.PreparationCheckList:OnLoadSelf()
     IUAddonFrameCloseButton:SetScript("OnClick", function() PreparationCheckListSelfFrame:Hide() end )
 
 
-    AZP.PreparationCheckList:initializeConfig(AZPPCLSelfOptionPanel)
+    AZP.PreparationCheckList:FillOptionsPanel(AZPPCLSelfOptionPanel)
     AZP.PreparationCheckList:OnLoadBoth(PreparationCheckListSelfFrame)
-end
-
-function AZP.PreparationCheckList:ChangeOptionsText()
-    CheckListSubPanelPHTitle:Hide()
-    CheckListSubPanelPHText:Hide()
-    CheckListSubPanelPHTitle:SetParent(nil)
-    CheckListSubPanelPHText:SetParent(nil)
-
-    local CheckListSubPanelHeader = CheckListSubPanel:CreateFontString("CheckListSubPanelHeader", "ARTWORK", "GameFontNormalHuge")
-    CheckListSubPanelHeader:SetText(promo)
-    CheckListSubPanelHeader:SetWidth(CheckListSubPanel:GetWidth())
-    CheckListSubPanelHeader:SetHeight(CheckListSubPanel:GetHeight())
-    CheckListSubPanelHeader:SetPoint("TOP", 0, -10)
-end
-
-function AZP.PreparationCheckList:initializeConfig(panel)
-    if AIUCheckedData == nil then
-        AIUCheckedData = AZP.PreparationChecklist.initialConfig
-    end
-    AZP.PreparationCheckList:createTreeGroupList(panel);
-end
-
-function AZP.OnEvent:PreparationCheckList(event, ...)
 end
 
 function AZP.PreparationCheckList:createTreeGroupList(panel)
@@ -119,7 +124,7 @@ function AZP.PreparationCheckList:createTreeGroupList(panel)
     scrollFrame:SetScrollChild(scrollPanel)
     local lastFrame = nil
 
-    for _, itemSections in ipairs(AZP.itemData) do
+    for _, itemSections in ipairs(AZP.PreparationCheckList.ItemData) do
         local sectionHeaderFrame = CreateFrame("Frame", "sectionHeaderFrame", scrollPanel)
         sectionHeaderFrame.contentText = sectionHeaderFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
         sectionHeaderFrame.contentText:SetPoint("TOPLEFT", 10, 0)
@@ -183,13 +188,13 @@ function AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName
     itemCheckBox:SetPoint("LEFT", 5, 0)
     itemCheckBox:SetHitRectInsets(0, 0, 0, 0)
 
-    itemCheckBox:SetChecked(AIUCheckedData["checkItemIDs"][itemID])
+    itemCheckBox:SetChecked(AZPPCLCheckedData["checkItemIDs"][itemID])
     local itemCountEditBox
     itemCheckBox:SetScript("OnClick", function()
         if itemCheckBox:GetChecked() == true then
             itemCountEditBox:SetEnabled(true)
         elseif itemCheckBox:GetChecked() == false then
-            AIUCheckedData["checkItemIDs"][itemID] = nil
+            AZPPCLCheckedData["checkItemIDs"][itemID] = nil
             itemCountEditBox:SetEnabled(false)
             itemCountEditBox:SetText("")
         end
@@ -203,13 +208,13 @@ function AZP.PreparationCheckList:drawCheckboxItem(itemID, parentFrame, itemName
     itemCountEditBox:SetAutoFocus(false)
     itemCountEditBox:SetNumeric(true)
     itemCountEditBox:SetScript("OnShow", function ()
-        if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
-            itemCountEditBox:SetText(tostring(AIUCheckedData["checkItemIDs"][itemID]))
+        if AZPPCLCheckedData["checkItemIDs"][itemID] ~= nil then
+            itemCountEditBox:SetText(tostring(AZPPCLCheckedData["checkItemIDs"][itemID]))
         else
             itemCountEditBox:SetEnabled(false)
         end
     end)
-    itemCountEditBox:SetScript("OnEditFocusLost", function() AIUCheckedData["checkItemIDs"][itemID] = tonumber(itemCountEditBox:GetText(), 10) end)
+    itemCountEditBox:SetScript("OnEditFocusLost", function() AZPPCLCheckedData["checkItemIDs"][itemID] = tonumber(itemCountEditBox:GetText(), 10) end)
 
     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
     itemIconLabel:SetSize(15, 15)
@@ -421,10 +426,10 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     enchFrame:SetSize(400, 40)
     enchFrame.contentText:SetSize(enchFrame:GetWidth(), enchFrame:GetHeight())
 
-    for _, section in ipairs(AZP.itemData) do
+    for _, section in ipairs(AZP.PreparationCheckList.ItemData) do
         for _, stat in ipairs(section[2]) do
             for _, itemID in ipairs(stat[2]) do
-                if AIUCheckedData["checkItemIDs"][itemID] ~= nil then
+                if AZPPCLCheckedData["checkItemIDs"][itemID] ~= nil then
                     i = i + 1
                     local itemName, itemIcon = AZP.PreparationCheckList:GetItemNameAndIcon(itemID)
                     local parentFrame = CreateFrame("Frame", "parentFrame", itemCheckListFrame)
@@ -438,11 +443,11 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
                     itemCountLabel.contentText:SetPoint("CENTER")
                     local iCountCurrent = GetItemCount(itemID)
                     if GetItemCount(itemID) == 0 then
-                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "/" .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
-                    elseif GetItemCount(itemID) < AIUCheckedData["checkItemIDs"][itemID] then
-                        itemCountLabel.contentText:SetText("\124cFFFF8800" .. iCountCurrent .. "/" ..  AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
+                        itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "/" .. AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
+                    elseif GetItemCount(itemID) < AZPPCLCheckedData["checkItemIDs"][itemID] then
+                        itemCountLabel.contentText:SetText("\124cFFFF8800" .. iCountCurrent .. "/" ..  AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
                     else
-                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "/" .. AIUCheckedData["checkItemIDs"][itemID] .. "\124r")
+                        itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "/" .. AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
                     end
 
                     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
@@ -481,11 +486,78 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     end
 end
 
-function AZP.PreparationCheckList:FillOptionsPanel(frameToFill)
-
+function AZP.PreparationCheckList:eventVariablesLoaded()
+    if AZPPCLCheckedData == nil then
+        AZPPCLCheckedData = AZP.PreparationCheckList.initialConfig
+    end
+    AZP.PreparationCheckList:createTreeGroupList(optionPanel);
 end
 
-if not IsAddOnLoaded("AzerPUG's Core") then
+function AZP.PreparationCheckList:FillOptionsPanel(frameToFill)
+    optionPanel = frameToFill
+    frameToFill:Hide()
+end
+
+function AZP.EasierGreatVault:ShareVersion()    -- Change DelayedExecution to native WoW Function.
+    local versionString = string.format("|PCL:%d|", AZP.VersionControl["Preparation CheckList"])
+    AZP.EasierGreatVault:DelayedExecution(10, function() 
+        if IsInGroup() then
+            if IsInRaid() then
+                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"RAID", 1)
+            else
+                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"PARTY", 1)
+            end
+        end
+        if IsInGuild() then
+            C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"GUILD", 1)
+        end
+    end)
+end
+
+function AZP.EasierGreatVault:ReceiveVersion(version)
+
+    if version > AZP.VersionControl["Preparation CheckList"] then
+        if (not HaveShowedUpdateNotification) then
+            HaveShowedUpdateNotification = true
+            UpdateFrame:Show()
+            UpdateFrame.text:SetText(
+                "Please download the new version through the CurseForge app.\n" ..
+                "Or use the CurseForge website to download it manually!\n\n" .. 
+                "Newer Version: v" .. version .. "\n" .. 
+                "Your version: v" .. AZP.VersionControl["Preparation CheckList"]
+            )
+        end
+    end
+end
+
+function AZP.EasierGreatVault:GetSpecificAddonVersion(versionString, addonWanted)
+    local pattern = "|([A-Z]+):([0-9]+)|"
+    local index = 1
+    while index < #versionString do
+        local _, endPos = string.find(versionString, pattern, index)
+        local addon, version = string.match(versionString, pattern, index)
+        index = endPos + 1
+        if addon == addonWanted then
+            return tonumber(version)
+        end
+    end
+end
+
+function AZP.PreparationCheckList:OnEvent(self, event, ...)
+    if event == "VARIABLES_LOADED" then
+        AZP.PreparationCheckList:eventVariablesLoaded()
+    elseif event == "CHAT_MSG_ADDON" then
+        local prefix, payload, _, sender = ...
+        if prefix == "AZPVERSIONS" then
+            local version = AZP.EasierGreatVault:GetSpecificAddonVersion(payload, "PCL")
+            if version ~= nil then
+                AZP.EasierGreatVault:ReceiveVersion(version)
+            end
+        end
+    end
+end
+
+if not IsAddOnLoaded("AzerPUGsCore") then
     AZP.PreparationCheckList:OnLoadSelf()
 end
 

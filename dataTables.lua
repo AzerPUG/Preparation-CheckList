@@ -1,13 +1,13 @@
 if AZP == nil then AZP = {} end
-if AZP.PreparationChecklist == nil then AZP.PreparationChecklist = {} end
+if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 
-AZP.PreparationChecklist.initialConfig =
+AZP.PreparationCheckList.initialConfig =
 {
     ["checkItemIDs"] = {}
 }
 
-if AZP.itemData == nil then
-    AZP.itemData =
+if AZP.PreparationCheckList.ItemData == nil then
+    AZP.PreparationCheckList.ItemData =
     {
         {
             "Flasks",
