@@ -1,5 +1,5 @@
 ## Interface: 90005
-## Title: |cFF00FFFFAzerPUG's|r |cFFFFFF00Preparation CheckList|r
+## Title: |cFF00FFFFAzerPUG's|r |cFFFF00FFPreparation CheckList|r
 ## Author: Tex & AzerPUG Gaming Community (www.azerpug.com/discord)
 ## OptionalDeps: AzerPUGsCore
 ## Notes: Utility for Instances (Raids and Dungeons)!
