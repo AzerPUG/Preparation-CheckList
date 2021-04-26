@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Preparation CheckList"] = 24
+AZP.VersionControl["Preparation CheckList"] = 25
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 
 local itemCheckListFrame
@@ -13,8 +13,6 @@ local EventFrame, UpdateFrame
 local HaveShowedUpdateNotification = false
 
 function AZP.PreparationCheckList:OnLoadBoth(frame)
- -- Remove button and make dynamic. On bag change event, maybe?
-    -- create frame for Preparation CheckList non-core
     CheckButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
     CheckButton.contentText = CheckButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     CheckButton.contentText:SetText("Check Items!")
