@@ -51,6 +51,7 @@ function AZP.PreparationCheckList:OnLoadSelf()
     EventFrame:SetScript("OnEvent", function(...) AZP.PreparationCheckList:OnEvent(...) end)
     EventFrame:RegisterEvent("VARIABLES_LOADED")
     EventFrame:RegisterEvent("CHAT_MSG_ADDON")
+    EventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
     UpdateFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
     UpdateFrame:SetPoint("CENTER", 0, 250)
@@ -501,7 +502,9 @@ function AZP.PreparationCheckList:eventVariablesLoaded()
         AZPPCLCheckedData = AZP.PreparationCheckList.initialConfig
     end
     AZP.PreparationCheckList:createTreeGroupList(optionPanel);
+end
 
+function AZP.PreparationCheckList:eventVariablesLoadedLocation()
     if AZPPCLShown == false then
         PreparationCheckListSelfFrame:Hide()
     end
@@ -517,9 +520,24 @@ function AZP.PreparationCheckList:FillOptionsPanel(frameToFill)
     frameToFill:Hide()
 end
 
-function AZP.EasierGreatVault:ShareVersion()    -- Change DelayedExecution to native WoW Function.
+function AZP.PreparationCheckList:DelayedExecution(delayTime, delayedFunction)
+    local frame = CreateFrame("Frame")
+    frame.start_time = GetServerTime()
+    frame:SetScript("OnUpdate",
+        function(self)
+            if GetServerTime() - self.start_time > delayTime then
+                delayedFunction()
+                self:SetScript("OnUpdate", nil)
+                self:Hide()
+            end
+        end
+    )
+    frame:Show()
+end
+
+function AZP.PreparationCheckList:ShareVersion() -- Change DelayedExecution to native WoW Function.
     local versionString = string.format("|PCL:%d|", AZP.VersionControl["Preparation CheckList"])
-    AZP.EasierGreatVault:DelayedExecution(10, function() 
+    AZP.PreparationCheckList:DelayedExecution(10, function() 
         if IsInGroup() then
             if IsInRaid() then
                 C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"RAID", 1)
@@ -533,8 +551,7 @@ function AZP.EasierGreatVault:ShareVersion()    -- Change DelayedExecution to na
     end)
 end
 
-function AZP.EasierGreatVault:ReceiveVersion(version)
-
+function AZP.PreparationCheckList:ReceiveVersion(version)
     if version > AZP.VersionControl["Preparation CheckList"] then
         if (not HaveShowedUpdateNotification) then
             HaveShowedUpdateNotification = true
@@ -549,7 +566,7 @@ function AZP.EasierGreatVault:ReceiveVersion(version)
     end
 end
 
-function AZP.EasierGreatVault:GetSpecificAddonVersion(versionString, addonWanted)
+function AZP.PreparationCheckList:GetSpecificAddonVersion(versionString, addonWanted)
     local pattern = "|([A-Z]+):([0-9]+)|"
     local index = 1
     while index < #versionString do
@@ -565,12 +582,15 @@ end
 function AZP.PreparationCheckList:OnEvent(self, event, ...)
     if event == "VARIABLES_LOADED" then
         AZP.PreparationCheckList:eventVariablesLoaded()
+        AZP.PreparationCheckList:ShareVersion()
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        AZP.PreparationCheckList:ShareVersion()
     elseif event == "CHAT_MSG_ADDON" then
         local prefix, payload, _, sender = ...
         if prefix == "AZPVERSIONS" then
-            local version = AZP.EasierGreatVault:GetSpecificAddonVersion(payload, "PCL")
+            local version = AZP.PreparationCheckList:GetSpecificAddonVersion(payload, "PCL")
             if version ~= nil then
-                AZP.EasierGreatVault:ReceiveVersion(version)
+                AZP.PreparationCheckList:ReceiveVersion(version)
             end
         end
     end
