@@ -79,15 +79,6 @@ function AZP.PreparationCheckList:OnLoadSelf()
     AZPPCLSelfOptionPanel.header:SetPoint("TOP", 0, -10)
     AZPPCLSelfOptionPanel.header:SetText("|cFF00FFFFAzerPUG's Preparation CheckList Options!|r")
 
-    -- AZPPCLSelfOptionPanel.footer = AZPPCLSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    -- AZPPCLSelfOptionPanel.footer:SetPoint("TOP", 0, -300)
-    -- AZPPCLSelfOptionPanel.footer:SetText(
-    --     "|cFF00FFFFAzerPUG Links:\n" ..
-    --     "Website: www.azerpug.com\n" ..
-    --     "Discord: www.azerpug.com/discord\n" ..
-    --     "Twitch: www.twitch.tv/azerpug\n|r"
-    -- )
-
     PreparationCheckListSelfFrame = CreateFrame("FRAME", nil, UIParent, "BackdropTemplate")
     PreparationCheckListSelfFrame:SetBackdrop({
             bgFile = "Interface/Tooltips/UI-Tooltip-Background",
@@ -99,7 +90,10 @@ function AZP.PreparationCheckList:OnLoadSelf()
     PreparationCheckListSelfFrame:SetSize(325, 220)
     PreparationCheckListSelfFrame:SetPoint("CENTER", 0, 0)
     PreparationCheckListSelfFrame:SetScript("OnDragStart", PreparationCheckListSelfFrame.StartMoving)
-    PreparationCheckListSelfFrame:SetScript("OnDragStop", PreparationCheckListSelfFrame.StopMovingOrSizing)
+    PreparationCheckListSelfFrame:SetScript("OnDragStop", function()
+        PreparationCheckListSelfFrame:StopMovingOrSizing()
+        AZP.PreparationCheckList:SaveMainFrameLocation()
+    end)
     PreparationCheckListSelfFrame:RegisterForDrag("LeftButton")
     PreparationCheckListSelfFrame:EnableMouse(true)
     PreparationCheckListSelfFrame:SetMovable(true)
@@ -107,11 +101,27 @@ function AZP.PreparationCheckList:OnLoadSelf()
     local IUAddonFrameCloseButton = CreateFrame("Button", nil, PreparationCheckListSelfFrame, "UIPanelCloseButton")
     IUAddonFrameCloseButton:SetSize(20, 21)
     IUAddonFrameCloseButton:SetPoint("TOPRIGHT", PreparationCheckListSelfFrame, "TOPRIGHT", 2, 2)
-    IUAddonFrameCloseButton:SetScript("OnClick", function() PreparationCheckListSelfFrame:Hide() end )
+    IUAddonFrameCloseButton:SetScript("OnClick", function() AZP.PreparationCheckList:ShowHideFrame() end )
 
 
     AZP.PreparationCheckList:FillOptionsPanel(AZPPCLSelfOptionPanel)
     AZP.PreparationCheckList:OnLoadBoth(PreparationCheckListSelfFrame)
+end
+
+function AZP.PreparationCheckList:ShowHideFrame()
+    if PreparationCheckListSelfFrame:IsShown() then
+        PreparationCheckListSelfFrame:Hide()
+        AZPPCLShown = false
+    elseif not PreparationCheckListSelfFrame:IsShown() then
+        PreparationCheckListSelfFrame:Show()
+        AZPPCLShown = true
+    end
+end
+
+function AZP.PreparationCheckList:SaveMainFrameLocation()
+    local temp = {}
+    temp[1], temp[2], temp[3], temp[4], temp[5] = PreparationCheckListSelfFrame:GetPoint()
+    AZPPCLLocation = temp
 end
 
 function AZP.PreparationCheckList:createTreeGroupList(panel)
@@ -491,6 +501,15 @@ function AZP.PreparationCheckList:eventVariablesLoaded()
         AZPPCLCheckedData = AZP.PreparationCheckList.initialConfig
     end
     AZP.PreparationCheckList:createTreeGroupList(optionPanel);
+
+    if AZPPCLShown == false then
+        PreparationCheckListSelfFrame:Hide()
+    end
+
+    if AZPPCLLocation == nil then
+        AZPPCLLocation = {"CENTER", nil, nil, 200, 0}
+    end
+    PreparationCheckListSelfFrame:SetPoint(AZPPCLLocation[1], AZPPCLLocation[4], AZPPCLLocation[5])
 end
 
 function AZP.PreparationCheckList:FillOptionsPanel(frameToFill)
@@ -562,7 +581,7 @@ if not IsAddOnLoaded("AzerPUGsCore") then
 end
 
 AZP.SlashCommands["PCL"] = function()
-    if PreparationCheckListSelfFrame ~= nil then PreparationCheckListSelfFrame:Show() end
+    if PreparationCheckListSelfFrame ~= nil then AZP.PreparationCheckList:ShowHideFrame() end
 end
 
 AZP.SlashCommands["pcl"] = AZP.SlashCommands["PCL"]
