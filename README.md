@@ -16,7 +16,7 @@
 AzerPUG's Preparation Checklist gives an easy way to check if you are prepared for a raid, dungeon or RBG. Within the options panel, the tracked items can be determined by the user themselves. After that one time set up, the user can simply click a button to make the addon check if you have all the preparations you need. Food, Flasks, Runes, Vantus, Pots, Armor Kits, Tomes, Oils. The user is also able to define number, how many they should have.
 
 # Bugs, Errors, Glitches and Requests.
-If you find any of the above, please do not hessitate to create a GitHub Issue here: https://github.com/AzerPUG/Preparation-CheckList/issues  
+If you find any of the above, please do not hesitate to create a GitHub Issue here: https://github.com/AzerPUG/Preparation-CheckList/issues  
 Or you can join our Discord and let us know in the AzerTech channel: http://www.azerpug.com/discord  
 Please note that our Discord Verification level prevents new people from talking/commenting/ranking in the first 10 minutes!
 
