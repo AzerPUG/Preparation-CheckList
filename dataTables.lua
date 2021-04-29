@@ -47,7 +47,7 @@ if AZP.PreparationCheckList.ItemData == nil then
         {
             "Runes",
             {
-                {"Augment", {28272}},
+                {"Augment", {181468}},
                 {"Vantus", {171203}}
             }
         }
