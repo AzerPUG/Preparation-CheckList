@@ -3,6 +3,7 @@ if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
 AZP.VersionControl["Preparation CheckList"] = 27
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
+if AZP.PreparationCheckList.Events == nil then AZP.PreparationCheckList.Events = {} end
 
 local itemCheckListFrame
 local AZPPCLSelfOptionPanel = nil
@@ -11,6 +12,7 @@ local optionHeader = "|cFF00FFFFPreparation CheckList|r"
 local PreparationCheckListSelfFrame
 local EventFrame, UpdateFrame
 local HaveShowedUpdateNotification = false
+local scrollFrameHeight = 0
 
 function AZP.PreparationCheckList:OnLoadBoth(frame)
     CheckButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
@@ -34,7 +36,9 @@ end
 
 function AZP.PreparationCheckList:OnLoadCore()
     AZP.PreparationCheckList:OnLoadBoth(AZP.Core.AddOns.PCL.MainFrame)
-    AZP.Core:RegisterEvents("VARIABLES_LOADED", function() AZP.PreparationCheckList:eventVariablesLoaded() end)
+    AZP.Core:RegisterEvents("VARIABLES_LOADED", function() AZP.PreparationCheckList.Event:VariablesLoaded() end)
+
+    scrollFrameHeight = 350
 
     AZP.OptionsPanels:RemovePanel("Preparation CheckList")
     AZP.OptionsPanels:Generic("Preparation CheckList", optionHeader, function(frame)
@@ -102,6 +106,7 @@ function AZP.PreparationCheckList:OnLoadSelf()
     IUAddonFrameCloseButton:SetPoint("TOPRIGHT", PreparationCheckListSelfFrame, "TOPRIGHT", 2, 2)
     IUAddonFrameCloseButton:SetScript("OnClick", function() AZP.PreparationCheckList:ShowHideFrame() end )
 
+    scrollFrameHeight = 500
 
     AZP.PreparationCheckList:FillOptionsPanel(AZPPCLSelfOptionPanel)
     AZP.PreparationCheckList:OnLoadBoth(PreparationCheckListSelfFrame)
@@ -125,8 +130,8 @@ end
 
 function AZP.PreparationCheckList:createTreeGroupList(panel)
     local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", panel, "UIPanelScrollFrameTemplate");
-    scrollFrame:SetSize(600, 500)
-    scrollFrame:SetPoint("TOPLEFT", -2, -60)
+    scrollFrame:SetSize(600, scrollFrameHeight)
+    scrollFrame:SetPoint("TOPLEFT", -2, -35)
     local scrollPanel = CreateFrame("Frame", "scrollPanel")
     scrollPanel:SetSize(500, 1000)
     scrollPanel:SetPoint("TOP")
@@ -495,14 +500,14 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     end
 end
 
-function AZP.PreparationCheckList:eventVariablesLoaded()
+function AZP.PreparationCheckList.Event:VariablesLoaded()
     if AZPPCLCheckedData == nil then
         AZPPCLCheckedData = AZP.PreparationCheckList.initialConfig
     end
     AZP.PreparationCheckList:createTreeGroupList(optionPanel);
 end
 
-function AZP.PreparationCheckList:eventVariablesLoadedLocation()
+function AZP.PreparationCheckList.Event:VariablesLoadedLocation()
     if AZPPCLShown == false then
         PreparationCheckListSelfFrame:Hide()
     end
@@ -583,8 +588,8 @@ end
 
 function AZP.PreparationCheckList:OnEvent(self, event, ...)
     if event == "VARIABLES_LOADED" then
-        AZP.PreparationCheckList:eventVariablesLoaded()
-        AZP.PreparationCheckList:eventVariablesLoadedLocation()
+        AZP.PreparationCheckList.Event:VariablesLoaded()
+        AZP.PreparationCheckList.Event:VariablesLoadedLocation()
         AZP.PreparationCheckList:ShareVersion()
     elseif event == "GROUP_ROSTER_UPDATE" then
         AZP.PreparationCheckList:ShareVersion()
