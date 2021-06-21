@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Preparation CheckList"] = 27
+AZP.VersionControl["Preparation CheckList"] = 28
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 if AZP.PreparationCheckList.Events == nil then AZP.PreparationCheckList.Events = {} end
 
@@ -36,7 +36,7 @@ end
 
 function AZP.PreparationCheckList:OnLoadCore()
     AZP.PreparationCheckList:OnLoadBoth(AZP.Core.AddOns.PCL.MainFrame)
-    AZP.Core:RegisterEvents("VARIABLES_LOADED", function() AZP.PreparationCheckList.Event:VariablesLoaded() end)
+    AZP.Core:RegisterEvents("VARIABLES_LOADED", function() AZP.PreparationCheckList.Events:VariablesLoaded() end)
 
     scrollFrameHeight = 350
 
@@ -500,14 +500,14 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     end
 end
 
-function AZP.PreparationCheckList.Event:VariablesLoaded()
+function AZP.PreparationCheckList.Events:VariablesLoaded()
     if AZPPCLCheckedData == nil then
         AZPPCLCheckedData = AZP.PreparationCheckList.initialConfig
     end
     AZP.PreparationCheckList:createTreeGroupList(optionPanel);
 end
 
-function AZP.PreparationCheckList.Event:VariablesLoadedLocation()
+function AZP.PreparationCheckList.Events:VariablesLoadedLocation()
     if AZPPCLShown == false then
         PreparationCheckListSelfFrame:Hide()
     end
