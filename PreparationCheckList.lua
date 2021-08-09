@@ -588,8 +588,8 @@ end
 
 function AZP.PreparationCheckList:OnEvent(self, event, ...)
     if event == "VARIABLES_LOADED" then
-        AZP.PreparationCheckList.Event:VariablesLoaded()
-        AZP.PreparationCheckList.Event:VariablesLoadedLocation()
+        AZP.PreparationCheckList.Events:VariablesLoaded()
+        AZP.PreparationCheckList.Events:VariablesLoadedLocation()
         AZP.PreparationCheckList:ShareVersion()
     elseif event == "GROUP_ROSTER_UPDATE" then
         AZP.PreparationCheckList:ShareVersion()
