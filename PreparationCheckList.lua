@@ -1,18 +1,17 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Preparation CheckList"] = 30
+AZP.VersionControl["Preparation CheckList"] = 31
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 if AZP.PreparationCheckList.Events == nil then AZP.PreparationCheckList.Events = {} end
 
-local itemCheckListFrame
+local itemCheckListFrame = nil
 local AZPPCLSelfOptionPanel = nil
 local optionPanel = nil
 local optionHeader = "|cFF00FFFFPreparation CheckList|r"
 local PreparationCheckListSelfFrame
 local EventFrame, UpdateFrame
 local HaveShowedUpdateNotification = false
-local scrollFrameHeight = 0
 
 function AZP.PreparationCheckList:OnLoadBoth(frame)
     CheckButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
@@ -106,8 +105,6 @@ function AZP.PreparationCheckList:OnLoadSelf()
     IUAddonFrameCloseButton:SetPoint("TOPRIGHT", PreparationCheckListSelfFrame, "TOPRIGHT", 2, 2)
     IUAddonFrameCloseButton:SetScript("OnClick", function() AZP.PreparationCheckList:ShowHideFrame() end )
 
-    scrollFrameHeight = 500
-
     AZP.PreparationCheckList:FillOptionsPanel(AZPPCLSelfOptionPanel)
     AZP.PreparationCheckList:OnLoadBoth(PreparationCheckListSelfFrame)
 end
@@ -130,7 +127,7 @@ end
 
 function AZP.PreparationCheckList:createTreeGroupList(panel)
     local scrollFrame = CreateFrame("ScrollFrame", "scrollFrame", panel, "UIPanelScrollFrameTemplate");
-    scrollFrame:SetSize(600, scrollFrameHeight)
+    scrollFrame:SetSize(600, 500)
     scrollFrame:SetPoint("TOPLEFT", -2, -35)
     local scrollPanel = CreateFrame("Frame", "scrollPanel")
     scrollPanel:SetSize(500, 1000)
@@ -280,154 +277,50 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
     itemCheckListFrame:SetSize(400, 300)
     itemCheckListFrame:SetPoint("TOPLEFT")
 
-    local ench = 0
     local enchFrame = CreateFrame("Frame", "enchFrame", itemCheckListFrame)
     enchFrame:SetPoint("TOPLEFT")
     enchFrame.contentText = enchFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     enchFrame.contentText:SetPoint("CENTER")
 
-    --local itemLink = GetInventoryItemLink("Player", 16)
-    --local _, _, _, _, _, Enchant, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-    --print("Info: " .. itemLink .. dash .. Enchant .. dash .. Gem1 .. dash .. Gem2 .. dash .. Gem3 .. dash .. Gem4)
-
-    -- /script _, _, _, _, _, enchantID = string.find(GetInventoryItemLink("Player", 16), "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)"); print(enchantID);
-
-    --  GemsSStats:     Crit       Mast        Haste       Vers
-    --  GemIDs:         ??????     ??????      ??????      ??????
-
-    -- Ring Enchants (SlotID: 11/12)
-    -- Crit -   Haste   -   Mast    -   Vers
-    -- 6164 -   6166    -   ????    -   6170
-    --
-    -- Wep Enchants (SlotID: 16/17)
-    -- Stats    -   ConeDPS -   Heal    -   HealTaken   -   DmgIncrease
-    -- 6229     -   6223    -   6226    -   ????        -   6229
-    --
-    -- Wep Enchants - DK (SlotID: 16/17)
-    -- Crusader -   Razorice    -   Gargoyle (2h)   -   Sanguination    -   Apocalypse      -   Thirst
-    -- 3368     -   3370        -   3847            -   6241            -   6245            -   6244
-    --
-    -- Chest Enchants (SlotID: 5)
-    -- Stats    -   Dmg     -   IntDmg  -   Mana    -   Armor
-    -- 6230     -   6214    -   ????    -   ????    -   ????
-    --
-    -- Cloak Enchants  (SlotID: 15)
-    -- Stam -   StamSpeed   -   StamLeech   -   StamAvoid
-    -- ???? -   6202        -   6204        -   6203
-
     local itemText = "\124cFF00FF00All Best Enchants/Gems Detected!\124r"
     local itemTextB = ""
-    local itemLink, enchantID
+    local itemLink = nil
 
-    itemLink = GetInventoryItemLink("Player", 5)
-    if itemLink ~= nil then
-        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6230" and enchantID ~= "6214" then
-            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = itemTextB .. " \124cFFFF0000Chest\124r"
-        end
-    end
+    local SlotData = AZP.PreparationCheckList.SlotData
 
-    itemLink = GetInventoryItemLink("Player", 11)
-    if itemLink ~= nil then
-        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6164" and enchantID ~= "6166" and enchantID ~= "6170" then
-            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = itemTextB .. " \124cFFFF0000Ring1\124r"
-        end
-    end
-
-    itemLink = GetInventoryItemLink("Player", 12)
-    if itemLink ~= nil then
-        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6164" and enchantID ~= "6166" and enchantID ~= "6170" then
-            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = itemTextB .. " \124cFFFF0000Ring2\124r"
-        end
-    end
-
-    itemLink = GetInventoryItemLink("Player", 15)
-    if itemLink ~= nil then
-        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6202" and enchantID ~= "6204" and enchantID ~= "6203" then
-            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = itemTextB .. " \124cFFFF0000Ring1\124r"
-        end
-    end
-
-    itemLink = GetInventoryItemLink("Player", 16)
-    if itemLink ~= nil then
-        _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-        if enchantID ~= "6229" and enchantID ~= "6223" and enchantID ~= "6226" and enchantID ~= "6229" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
-            itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-            itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
-        end
-    end
-
-    itemLink = GetInventoryItemLink("Player", 17)
-    if itemLink ~= nil then
-        local _, _, _, _, _, _, v7 = GetItemInfo(itemLink)
-        if v7 ~= "Miscellaneous" then
-            _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
-            if enchantID ~= "6229" and enchantID ~= "6223" and enchantID ~= "6226" and enchantID ~= "6229" and enchantID ~= "3368" and enchantID ~= "3370" and enchantID ~= "3847" and enchantID ~= "6241" and enchantID ~= "6245" and enchantID ~= "6244" then
-                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-                itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
-            end
-        end
-    end
-
-    for slotID = 6, 10 do
-        itemLink = GetInventoryItemLink("Player", slotID)
+    local EnchantData = AZP.PreparationCheckList.EnchantData
+    local EnchantSlots = EnchantData.EnchantSlots
+    for SlotIndex = 1, #EnchantSlots do
+        local curSlot = EnchantSlots[SlotIndex]
+        itemLink = GetInventoryItemLink("Player", curSlot)
         if itemLink ~= nil then
-            local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-            local stats =  GetItemStats(itemLink)
-            local socks
-            if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
-                socks = stats["EMPTY_SOCKET_PRISMATIC"]
-                if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
+            local _, _, _, _, _, _, v7 = GetItemInfo(itemLink)
+            if curSlot == 17 and v7 ~= "??" then break end
+            local _, _, _, _, _, enchantID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*)")
+            if EnchantData[curSlot] ~= nil then
+                if EnchantData[curSlot][tonumber(enchantID)] == nil then
+                    print(string.format("Error:     - CurSlot: %s     - enchantID: %s", curSlot, enchantID))
                     itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-                    local itemTextC
-                    if slotID == 6 then 
-                        itemTextC = " \124cFFFF0000Waist\124r"
-                    elseif slotID == 7 then
-                        itemTextC = " \124cFFFF0000Legs\124r"
-                    elseif slotID == 8 then
-                        itemTextC = " \124cFFFF0000Feet\124r"
-                    elseif slotID == 9 then
-                        itemTextC = " \124cFFFF0000Wrist\124r"
-                    elseif slotID == 10 then 
-                        itemTextC = " \124cFFFF0000Hands\124r"
-                    end
-                    itemTextB = itemTextB .. itemTextC
+                    itemTextB = itemTextB .. " \124cFFFF0000" .. SlotData[curSlot] .. "\124r"
                 end
             end
         end
     end
 
-    itemLink = GetInventoryItemLink("Player", 16)
-    if itemLink ~= nil then
-        local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-        local stats =  GetItemStats(itemLink)
-        local socks
-        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then
-            socks = stats["EMPTY_SOCKET_PRISMATIC"]
-            if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
-                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-                itemTextB = itemTextB .. " \124cFFFF0000MainHand\124r"
-            end
-        end
-    end
-
-    itemLink = GetInventoryItemLink("Player", 17)
-    if itemLink ~= nil then
-        local _, _, _, _, _, _, Gem1, Gem2, Gem3, Gem4 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
-        local stats =  GetItemStats(itemLink)
-        local socks
-        if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then 
-            socks = stats["EMPTY_SOCKET_PRISMATIC"]
-            if Gem1 ~= "168639" and Gem1 ~= "168640" and Gem1 ~= "168641" and Gem1 ~= "168642" and Gem1 ~= "153709" and Gem1 ~= "168638" and Gem1 ~= "153708" and Gem1 ~= "168637" and Gem1 ~= "153707" and Gem1 ~= "168636" then
-                itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
-                itemTextB = itemTextB .. " \124cFFFF0000OffHand\124r"
+    local SocketData = AZP.PreparationCheckList.SocketData
+    local SocketSlots = SocketData.SocketSlots
+    for SlotIndex = 1, #SocketSlots do
+        local curSlot = SocketSlots[SlotIndex]
+        itemLink = GetInventoryItemLink("Player", curSlot)
+        if itemLink ~= nil then
+            local stats = GetItemStats(itemLink)
+            if stats["EMPTY_SOCKET_PRISMATIC"] ~= nil then
+                local _, _, _, _, _, _, Gem1 = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*)")
+                if SocketData[tonumber(Gem1)] == nil then
+                    itemText = "\124cFFFF0000Low/No Enchants/Gems Detected!\124r"
+                    local itemTextC = SlotData[curSlot]
+                    itemTextB = itemTextB .. "\124cFFFF0000" .. itemTextC .. "\124r"
+                end
             end
         end
     end
