@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Preparation CheckList"] = 32
+AZP.VersionControl["Preparation CheckList"] = 33
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 if AZP.PreparationCheckList.Events == nil then AZP.PreparationCheckList.Events = {} end
 

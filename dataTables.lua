@@ -51,8 +51,18 @@ AZP.PreparationCheckList.ItemData =
         }
     },
     {
+        "Wepon Mods",
+        {
+            {"Shadowcore", {171285}},
+            {"Embalmers", {171286}},
+            {"SWeight Stone", {171439}},
+            {"SSharpening Stone", {171437}},
+        }
+    },
+    {
         "Other",
         {
+            {"Armor Kit", {172347}},
             {"Auto Hammer", {132514}},
         }
     }
