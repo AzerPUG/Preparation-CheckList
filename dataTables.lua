@@ -39,7 +39,7 @@ AZP.PreparationCheckList.ItemData =
             {"Stamina", {171274}},
             {"Armor", {171271}},
             {"Mana/Heal", {171268, 171272, 176811, 171350}},
-            {"Health", {171267, 171269}},
+            {"Health", {187802}},
             {"Other", {183823, 184090, 171266, 171370, 171263, 171264, 171349, 171352, 171351}},
         }
     },
@@ -47,7 +47,7 @@ AZP.PreparationCheckList.ItemData =
         "Runes",
         {
             {"Augment", {181468}},
-            {"Vantus", {186662}},
+            {"Vantus", {187805}},
         }
     },
     {
