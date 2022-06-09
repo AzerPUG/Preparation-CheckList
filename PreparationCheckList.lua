@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Preparation CheckList"] = 36
+AZP.VersionControl["Preparation CheckList"] = 37
 if AZP.PreparationCheckList == nil then AZP.PreparationCheckList = {} end
 if AZP.PreparationCheckList.Events == nil then AZP.PreparationCheckList.Events = {} end
 
@@ -348,6 +348,7 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
                     itemCountLabel:SetPoint("LEFT")
                     itemCountLabel.contentText = itemCountLabel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
                     itemCountLabel.contentText:SetPoint("CENTER")
+
                     local iCountCurrent = GetItemCount(itemID)
                     if GetItemCount(itemID) == 0 then
                         itemCountLabel.contentText:SetText("\124cFFFF0000" .. iCountCurrent .. "/" .. AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
@@ -355,6 +356,16 @@ function AZP.PreparationCheckList:getItemsCheckListFrame(mainFrame)
                         itemCountLabel.contentText:SetText("\124cFFFF8800" .. iCountCurrent .. "/" ..  AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
                     else
                         itemCountLabel.contentText:SetText("\124cFF00FF00" .. iCountCurrent .. "/" .. AZPPCLCheckedData["checkItemIDs"][itemID] .. "\124r")
+                    end
+
+                    if itemID == 181468 then
+                        local permaRune = GetItemCount(190384)
+                        if permaRune > 0 then
+                            itemName, itemIcon = AZP.PreparationCheckList:GetItemNameAndIcon(190384)
+                            itemCountLabel.contentText:SetText("\124cFF00FF00∞\124r")
+                            local v1, v2, v3 = itemCountLabel.contentText:GetFont()
+                            itemCountLabel.contentText:SetFont(v1, v2 + 6, v3)
+                        end
                     end
 
                     local itemIconLabel = CreateFrame("Frame", "checkIcon", parentFrame)
