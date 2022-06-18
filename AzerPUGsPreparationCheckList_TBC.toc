@@ -6,6 +6,6 @@
 ## Version: SL 9.2.5 (For actual addon version, check PreparationCheckList.lua)
 ## SavedVariablesPerCharacter: AZPPCLCheckedData, AZPPCLLocation, AZPPCLShown
 
-dataTables.lua
+datatables/TBCData.lua
 SlashCommands.lua
 PreparationCheckList.lua
